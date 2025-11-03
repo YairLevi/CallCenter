@@ -26,8 +26,10 @@ export class CallsService {
     return await this.callModel.findOneAndUpdate({
       _id: id
     }, {
+      ...dto,
       updatedAt: new Date(),
-      ...dto
+    }, {
+      new: true
     }).exec()
   }
 
