@@ -1,12 +1,12 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { CallController } from './call.controller';
-import { CallService } from './call.service';
+import { CallsController } from './calls.controller';
+import { CallsService } from './calls.service';
 import * as request from 'supertest';
 import { INestApplication, HttpStatus } from '@nestjs/common';
 import { MongooseModule, SchemaFactory } from '@nestjs/mongoose';
 import { MongoMemoryServer } from 'mongodb-memory-server';
-import { Call } from './call.model';
-import { CreateCallDTO, UpdateCallDTO } from './call.dto';
+import { Call } from './calls.model';
+import { CreateCallDTO, UpdateCallDTO } from './calls.dto';
 
 // --- Setup MongoMemoryServer for isolated testing ---
 
@@ -35,7 +35,7 @@ const mockUpdateDto: UpdateCallDTO = {
 };
 
 
-describe('CallController (Integration Test with MongoDB)', () => {
+describe('CallsController (Integration Test with MongoDB)', () => {
   let app: INestApplication;
 
   // 1. Setup and Teardown the Test Database
@@ -51,8 +51,8 @@ describe('CallController (Integration Test with MongoDB)', () => {
         // Import the necessary Mongoose Schemas/Models
         MongooseModule.forFeature([{ name: Call.name, schema: SchemaFactory.createForClass(Call) }]),
       ],
-      controllers: [CallController],
-      providers: [CallService], // Use the real service for integration
+      controllers: [CallsController],
+      providers: [CallsService], // Use the real service for integration
     }).compile();
 
     // 3. Initialize the NestJS application

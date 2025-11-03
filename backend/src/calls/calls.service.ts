@@ -1,17 +1,21 @@
 import { Injectable } from '@nestjs/common';
 import { Model } from "mongoose";
 import { InjectModel } from "@nestjs/mongoose";
-import { Call, CallDocument } from "./call.model";
-import { CreateCallDTO, UpdateCallDTO } from "./call.dto";
+import { Call, CallDocument } from "./calls.model";
+import { CreateCallDTO, UpdateCallDTO } from "./calls.dto";
 
 @Injectable()
-export class CallService {
+export class CallsService {
   constructor(
     @InjectModel(Call.name) private callModel: Model<CallDocument>
   ) {}
 
   async getAll(){
-    return await this.callModel.find().exec()
+    const populateField: keyof Call = 'tags'
+    return await this.callModel
+      .find()
+      .populate(populateField)
+      .exec()
   }
 
   async create(dto: CreateCallDTO) {

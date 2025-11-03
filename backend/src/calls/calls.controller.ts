@@ -10,14 +10,14 @@ import {
   Post,
   Put
 } from "@nestjs/common";
-import { CallService } from "./call.service";
-import { CreateCallDTO, UpdateCallDTO } from "./call.dto";
+import { CallsService } from "./calls.service";
+import { CreateCallDTO, UpdateCallDTO } from "./calls.dto";
 import { Types } from "mongoose";
 
 @Controller("calls")
-export class CallController {
+export class CallsController {
   constructor(
-    private readonly callService: CallService
+    private readonly callService: CallsService
   ) {}
 
   @Get()
