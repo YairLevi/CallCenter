@@ -34,7 +34,7 @@ export class CallsController {
   @Put(":id")
   update(@Param("id") id: string, @Body() dto: UpdateCallDTO) {
     if (!Types.ObjectId.isValid(id)) {
-      throw new BadRequestException(`Invalid call ID value: ${id}`);
+      throw new BadRequestException(`Invalid ID value: ${id}`);
     }
     return this.callService.update(id, dto)
   }
@@ -43,7 +43,7 @@ export class CallsController {
   @HttpCode(HttpStatus.NO_CONTENT)
   async delete(@Param("id") id: string) {
     if (!Types.ObjectId.isValid(id)) {
-      throw new BadRequestException(`Invalid call ID value: ${id}`);
+      throw new BadRequestException(`Invalid ID value: ${id}`);
     }
     await this.callService.delete(id)
   }

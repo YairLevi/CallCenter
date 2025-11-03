@@ -10,14 +10,14 @@ import {
   Post,
   Put
 } from "@nestjs/common";
-import { TagsService } from "./tags.service";
-import { CreateTagDTO, UpdateTagDTO } from "./tags.dto";
+import { TasksService } from "./tasks.service";
+import { CreateTaskDTO, UpdateTaskDTO } from "./tasks.dto";
 import { Types } from "mongoose";
 
-@Controller("tags")
-export class TagsController {
+@Controller("tasks")
+export class TasksController {
   constructor(
-    private readonly tagsService: TagsService
+    private readonly tagsService: TasksService
   ) {}
 
   @Get()
@@ -27,12 +27,12 @@ export class TagsController {
 
   @Post()
   @HttpCode(HttpStatus.CREATED)
-  create(@Body() dto: CreateTagDTO) {
+  create(@Body() dto: CreateTaskDTO) {
     return this.tagsService.create(dto)
   }
 
   @Put(":id")
-  update(@Param("id") id: string, @Body() dto: UpdateTagDTO) {
+  update(@Param("id") id: string, @Body() dto: UpdateTaskDTO) {
     if (!Types.ObjectId.isValid(id)) {
       throw new BadRequestException(`Invalid ID value: ${id}`);
     }

@@ -1,6 +1,7 @@
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
 import { HydratedDocument, mongo, Schema as MongooseSchema, Types } from "mongoose";
 import { Tag } from "../tags/tags.model";
+import { Task } from "../tasks/tasks.model";
 
 
 // we don't add validations on the properties for now.
@@ -20,6 +21,9 @@ export class Call {
 
   @Prop({ type: [{ type: Types.ObjectId, ref: Tag.name }] })
   tags: Types.ObjectId[];
+
+  @Prop({ type: [{ type: Types.ObjectId, ref: Task.name }]})
+  tasks: Types.ObjectId[]
 }
 
 export type CallDocument  = HydratedDocument<Call>
