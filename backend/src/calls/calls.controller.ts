@@ -1,18 +1,7 @@
-import {
-  BadRequestException,
-  Body,
-  Controller,
-  Delete,
-  Get,
-  HttpCode,
-  HttpStatus,
-  Param,
-  Post,
-  Put
-} from "@nestjs/common";
+import { Body, Controller, Get, HttpCode, HttpStatus, Param, Post, Put } from "@nestjs/common";
 import { CallsService } from "./calls.service";
-import { CreateCallDTO, UpdateCallDTO } from "./calls.dto";
-import { Types } from "mongoose";
+import { CreateCallDTO } from "./calls.dto";
+import { TaskDocument } from "../tasks/tasks.model";
 
 @Controller("calls")
 export class CallsController {
@@ -46,12 +35,8 @@ export class CallsController {
     return this.callService.addTask(id, dto.name)
   }
 
-  @Delete(":id")
-  @HttpCode(HttpStatus.NO_CONTENT)
-  async delete(@Param("id") id: string) {
-    if (!Types.ObjectId.isValid(id)) {
-      throw new BadRequestException(`Invalid ID value: ${id}`);
-    }
-    await this.callService.delete(id)
+  @Put(':id/tasks')
+  changeTaskStatus(@Param('id') id: string, @Body() dto: Partial<TaskDocument>) {
+    return this.callService.changeTaskStatus(id, dto)
   }
 }

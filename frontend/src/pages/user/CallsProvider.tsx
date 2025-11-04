@@ -1,6 +1,5 @@
-import { createContext, type PropsWithChildren, useContext, useState } from "react";
-import { type Call, type Tag, type Task, Status } from "@/api/types";
-import { dummyCalls } from "@/pages/user/mock.ts";
+import { createContext, type PropsWithChildren, useContext } from "react";
+import { type Call } from "@/api/types";
 import { useCallsQueries } from "@/api/calls.tsx";
 import type { UseMutationResult, UseQueryResult } from "@tanstack/react-query";
 import { useTasksQueries } from "@/api/tasks.tsx";
@@ -12,7 +11,7 @@ type ContextExports = {
   add: (call: Partial<Call>) => void
   addTask: (callID: string) => UseMutationResult
   assignTag: (callID: string) => UseMutationResult
-  // editTask: (callID: string, task: Task) => void
+  changeTaskStatus: (callID: string) => UseMutationResult
 }
 
 const Context = createContext<ContextExports>({} as ContextExports)
@@ -35,8 +34,9 @@ export function CallsProvider({ children }: PropsWithChildren) {
     calls: callQueries.getAll.data,
     single: (callID: string) => callQueries.getSingle(callID),
     add: (call: Partial<Call>) => callQueries.add.mutate(call.name),
+    assignTag: callQueries.assignTag,
     addTask: taskQueries.addTask,
-    assignTag: callQueries.assignTag
+    changeTaskStatus: (callID: string) => taskQueries.changeTaskStatus(callID)
   }
 
   return (

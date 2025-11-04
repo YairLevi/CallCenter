@@ -1,5 +1,5 @@
-import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
-import { HydratedDocument, mongo, Schema as MongooseSchema, Types } from "mongoose";
+import { Prop, Schema } from "@nestjs/mongoose";
+import { HydratedDocument, Types } from "mongoose";
 import { Tag } from "../tags/tags.model";
 import { Task } from "../tasks/tasks.model";
 
@@ -17,7 +17,12 @@ export class Call {
   @Prop({ type: [{ type: Types.ObjectId, ref: Tag.name }], default: [] })
   tags: Types.ObjectId[];
 
-  @Prop({ type: [Task], default: [] })
+  @Prop({
+    type: [Task],
+    default: [],
+    toJSON: { virtuals: true },
+    toObject: { virtuals: true }
+  })
   tasks: Task[]
 }
 

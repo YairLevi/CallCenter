@@ -5,15 +5,16 @@ import { useCalls } from "@/pages/user/CallsProvider.tsx";
 import { useParams } from "react-router";
 import { AssignTagDialog } from "@/pages/user/AssignTagDialog.tsx";
 import { AddTaskDialog } from "@/pages/user/AddTaskDialog.tsx";
+import { ChangeTaskStatusDialog } from "@/pages/user/ChangeTaskStatusDialog.tsx";
 
 export function Call() {
-  const { id } = useParams()
   const [open, setOpen] = useState(false)
   const [openStatusChanger, setOpenStatusChanger] = useState(false)
   const [openAddTask, setOpenAddTask] = useState(false)
-  const [selectedTask, setSelectedTask] = useState<Task>()
 
+  const { id } = useParams()
   const { data: call, isPending } = useCalls().single(id)
+  const [selectedTask, setSelectedTask] = useState<Task>()
 
 
   if (isPending)
@@ -64,25 +65,14 @@ export function Call() {
       </div>
     </div>
 
-    {/*{selectedTask &&*/}
-    {/*    <ChangeTaskStatusDialog*/}
-    {/*        title={`Change status for task: ${selectedTask.name}`}*/}
-    {/*        open={openStatusChanger}*/}
-    {/*        call={id}*/}
-    {/*        task={selectedTask}*/}
-    {/*        onClose={() => setOpenStatusChanger(false)}*/}
-    {/*    />}*/}
-
-    <AddTaskDialog
-      open={openAddTask}
-      onClose={() => setOpenAddTask(false)}
-      title='Add New Task'
-    />
-
-    <AssignTagDialog
-      open={open}
-      onClose={() => setOpen(false)}
-      title='Assign Tag to Call'
-    />
+    {selectedTask &&
+        <ChangeTaskStatusDialog
+            title={`Change status for task: ${selectedTask.name}`}
+            open={openStatusChanger}
+            task={selectedTask}
+            onClose={() => setOpenStatusChanger(false)}
+        />}
+    <AddTaskDialog open={openAddTask} onClose={() => setOpenAddTask(false)} title='Add New Task'/>
+    <AssignTagDialog open={open} onClose={() => setOpen(false)} title='Assign Tag to Call'/>
   </>
 }

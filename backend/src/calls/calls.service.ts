@@ -1,9 +1,9 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { Model } from "mongoose";
 import { InjectModel } from "@nestjs/mongoose";
 import { Call, CallDocument } from "./calls.model";
 import { CreateCallDTO, UpdateCallDTO } from "./calls.dto";
-import { Task } from "../tasks/tasks.model";
+import { Task, TaskDocument } from "../tasks/tasks.model";
 
 @Injectable()
 export class CallsService {
@@ -47,7 +47,20 @@ export class CallsService {
     ).exec()
   }
 
-  async delete(id: string) {
-    return await this.callModel.deleteOne({ _id: id }).exec()
+  async changeTaskStatus(id: string, task: Partial<TaskDocument> ) {
+    const call = await this.callModel.findById(id);
+    if (!call) throw new NotFoundException(`Call ${id} not found`);
+
+    const taskDoc = call.tasks.find((t: TaskDocument) => t.id === task.id);
+    if (!taskDoc) {
+      throw new NotFoundException(`Task ${task.id} not found`);
+    }
+
+    if (task.status) {
+      taskDoc.status = task.status;
+    }
+
+    await call.save();
+    return call;
   }
 }

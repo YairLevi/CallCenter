@@ -1,17 +1,18 @@
 import { Dialog, type DialogProps } from "@/components/dialog.tsx";
 import { useCalls } from "@/pages/user/CallsProvider.tsx";
-import { type Call, Status, type Task } from "@/api/types.tsx";
+import { Status, type Task } from "@/api/types.tsx";
+import { useParams } from "react-router";
 
 type AssignTagDialogProps = DialogProps & {
-  call: Call,
   task: Task
 }
 
 export function ChangeTaskStatusDialog(props: AssignTagDialogProps) {
-  const { editTask } = useCalls()
+  const { id } = useParams()
+  const mutation = useCalls().changeTaskStatus(id)
 
   function changeStatus(status: Status) {
-    editTask(props.call.id, { ...props.task, status })
+    mutation.mutate({ ...props.task, status})
     props.onClose()
   }
 
