@@ -1,35 +1,36 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
+import { Route, Routes, useLocation, useNavigate } from "react-router";
 import './App.css'
+import { AdminPage } from "./pages/admin";
+import { Button } from "@/components/ui/button.tsx";
+import { UserPage } from "@/pages/user";
 
 function App() {
-  const [count, setCount] = useState(0)
+  const location = useLocation()
+  const navigate = useNavigate()
+
+  const isAdmin = location.pathname.endsWith('admin')
+  const isUser = location.pathname.endsWith('user')
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+    <div className="flex flex-col justify-center items-center h-screen">
+      <div className="flex items-center mb-20">
+        <Button
+          className={`cursor-pointer rounded-r-none border-r-2 ${isAdmin ? 'bg-sky-700' : 'bg-neutral-700'}`}
+          onClick={() => navigate('/admin')}
+        >Admin</Button>
+        <Button
+          className={`cursor-pointer rounded-l-none border-l-0 ${isUser ? 'bg-sky-700' : 'bg-neutral-700'}`}
+          onClick={() => navigate('/user')}
+        >User</Button>
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-          This is a test to see if the deployment works.
-        </p>
+      <div className="w-8/10 h-8/10 bg-amber-50">
+        <Routes>
+          <Route path='/admin' element={<AdminPage/>}/>
+          <Route path='/user' element={<UserPage/>}/>
+          <Route path='*' element={<div>Unknown. Please select the user page or admin page!</div>}/>
+        </Routes>
       </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
+    </div>
   )
 }
 
