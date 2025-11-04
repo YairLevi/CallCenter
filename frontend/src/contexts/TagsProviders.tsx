@@ -28,23 +28,23 @@ export function TagsProvider({ children }: PropsWithChildren) {
     { id: "tag-3", name: "Q4 Goal" },
     { id: "tag-4", name: "Bug" },
     { id: "tag-5", name: "Urgent" },
-    { id: "tag-6", name: "Sales" },
-    { id: "tag-7", name: "Demo" },
-    { id: "tag-8", name: "Internal" },
-    { id: "tag-9", name: "Team" },
-    { id: "tag-10", name: "Feature Request" },
-    { id: "tag-11", name: "Product" },
-
-    // === Extra useful tags ===
-    { id: "tag-12", name: "Blocked" },
-    { id: "tag-13", name: "Review" },
-    { id: "tag-14", name: "Customer Success" },
-    { id: "tag-15", name: "Onboarding" },
-    { id: "tag-16", name: "Escalated" },
-    { id: "tag-17", name: "Low Priority" },
-    { id: "tag-18", name: "Follow Up" },
-    { id: "tag-19", name: "Documentation" },
-    { id: "tag-20", name: "Billing" },
+    // { id: "tag-6", name: "Sales" },
+    // { id: "tag-7", name: "Demo" },
+    // { id: "tag-8", name: "Internal" },
+    // { id: "tag-9", name: "Team" },
+    // { id: "tag-10", name: "Feature Request" },
+    // { id: "tag-11", name: "Product" },
+    //
+    // // === Extra useful tags ===
+    // { id: "tag-12", name: "Blocked" },
+    // { id: "tag-13", name: "Review" },
+    // { id: "tag-14", name: "Customer Success" },
+    // { id: "tag-15", name: "Onboarding" },
+    // { id: "tag-16", name: "Escalated" },
+    // { id: "tag-17", name: "Low Priority" },
+    // { id: "tag-18", name: "Follow Up" },
+    // { id: "tag-19", name: "Documentation" },
+    // { id: "tag-20", name: "Billing" },
   ])
 
   function add(tag: Pick<Tag, 'name'>) {

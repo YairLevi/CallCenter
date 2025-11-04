@@ -1,4 +1,4 @@
-import React, { type PropsWithChildren } from "react";
+import React, { type PropsWithChildren, useEffect, useState } from "react";
 import { XIcon } from 'lucide-react'
 import { cn } from "@/lib/utils.ts";
 
@@ -6,6 +6,14 @@ export interface DialogProps extends PropsWithChildren {
   open: boolean
   onClose: () => void
   title?: string
+}
+
+export function useDialogProps() {
+  const [isOpen, setOpen] = useState(false)
+  const open = () => setOpen(true)
+  const close = () => setOpen(false)
+
+  return { isOpen, open, close }
 }
 
 export function Group({ children, label }: PropsWithChildren & { label?: string }) {
@@ -30,7 +38,7 @@ export function Dialog({ open, onClose, title, children }: DialogProps) {
     <div
       onClick={onClose}
       className={cn(
-        'fixed top-0 left-0 w-screen h-screen bg-black bg-opacity-40 backdrop-blur-sm flex items-center justify-center',
+        'transition-all fixed top-0 left-0 w-screen h-screen bg-black bg-opacity-40 backdrop-blur-sm flex items-center justify-center',
         open ? 'scale-100' : 'scale-0'
       )}
     >

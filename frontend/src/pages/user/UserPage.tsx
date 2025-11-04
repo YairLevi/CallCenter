@@ -17,7 +17,7 @@ export function UserPage() {
     const selectedID = selectedCall.id
     const call = calls.find(c => c.id == selectedID)
     if (call != undefined)
-    {console.log('here');setSelectedCall(call)}
+      setSelectedCall(call)
     else
       setSelectedCall(null)
   }, [calls])

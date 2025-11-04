@@ -27,7 +27,6 @@ export function CallsProvider({ children }: PropsWithChildren) {
   const [calls, setCalls] = useState<CallType[]>(dummyCalls)
 
   function add(call: Pick<CallType, 'name'>) {
-    console.log(call)
     setCalls(prev => [...prev, {
       id: `${Math.random()}`,
       name: call.name,
