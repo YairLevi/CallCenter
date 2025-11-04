@@ -43,7 +43,7 @@ export function UserPage() {
         <div className="flex-1 h-full">
           {
             !selectedCall
-              ? <div className="text-center mt-auto">Press here to create a new call...</div>
+              ? <div className="h-full text-gray-400 select-none italic flex items-center justify-center" onClick={() => setOpen(true)}>Press here to create a new call...</div>
               : <Call call={selectedCall} />
           }
         </div>
