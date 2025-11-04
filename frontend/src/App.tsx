@@ -1,10 +1,10 @@
 import { Route, Routes, useLocation, useNavigate } from "react-router";
-import './App.css'
 import { AdminPage } from "./pages/admin";
 import { Button } from "@/components/ui/button.tsx";
 import { UserPage } from "@/pages/user";
 import { CallsProvider } from "@/pages/user/CallsProvider.tsx";
 import { TagsProvider } from "@/contexts/TagsProviders.tsx";
+import './App.css'
 
 function App() {
   const location = useLocation()
@@ -19,11 +19,15 @@ function App() {
         <Button
           className={`cursor-pointer rounded-r-none border-r-2 ${isAdmin ? 'bg-sky-700' : 'bg-neutral-700'}`}
           onClick={() => navigate('/admin')}
-        >Admin</Button>
+        >
+          Admin
+        </Button>
         <Button
           className={`cursor-pointer rounded-l-none border-l-0 ${isUser ? 'bg-sky-700' : 'bg-neutral-700'}`}
           onClick={() => navigate('/user')}
-        >User</Button>
+        >
+          User
+        </Button>
       </div>
       <TagsProvider>
         <div className="w-8/10 h-8/10">

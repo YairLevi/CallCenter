@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import { useState } from "react"
 import { Button } from "@/components/ui/button.tsx";
 import { Input } from "@/components/ui/input.tsx";
 import { Dialog, useDialogProps } from "@/components/dialog.tsx";
@@ -23,6 +23,7 @@ export function AdminPage() {
 
   function onOpenEditing(tag: Tag) {
     setToEdit(tag)
+    setEditedName(tag.name)
     editDialog.open()
   }
 
@@ -47,12 +48,14 @@ export function AdminPage() {
         <div className="mt-6 items-left w-full flex flex-col overflow-y-auto">
           <h2 className="font-semibold text-lg mb-2">Tags:</h2>
           <ul className="h-full overflow-y-auto">
-            {tags.map(tag => (
-              <li key={tag.id} className="mb-1 border border-gray-300 rounded-md p-4 flex justify-between items-center">
-                <p>{tag.name}</p>
-                <Button onClick={() => onOpenEditing(tag)}>Edit</Button>
-              </li>
-            ))}
+            {(tags ?? [])
+              .sort((t1, t2) => t1.name.localeCompare(t2.name))
+              .map(tag => (
+                <li key={tag.id} className="mb-1 border border-gray-300 rounded-md p-4 flex justify-between items-center">
+                  <p>{tag.name}</p>
+                  <Button onClick={() => onOpenEditing(tag)}>Edit</Button>
+                </li>
+              ))}
           </ul>
         </div>
       </div>
