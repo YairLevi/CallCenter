@@ -1,9 +1,9 @@
 import { Dialog, type DialogProps } from "@/components/dialog.tsx";
 import { useCalls } from "@/pages/user/CallsProvider.tsx";
-import { type CallType, Status, type Task } from "@/api/types.tsx";
+import { type Call, Status, type Task } from "@/api/types.tsx";
 
 type AssignTagDialogProps = DialogProps & {
-  call: CallType,
+  call: Call,
   task: Task
 }
 

@@ -39,7 +39,7 @@ export function Dialog({ open, onClose, title, children }: DialogProps) {
       onClick={onClose}
       className={cn(
         'transition-all fixed top-0 left-0 w-screen h-screen bg-black bg-opacity-40 backdrop-blur-sm flex items-center justify-center',
-        open ? 'scale-100' : 'scale-0'
+        open ? 'scale-100 visible' : 'scale-90 invisible'
       )}
     >
       <div

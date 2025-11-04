@@ -1,21 +1,16 @@
 import { Dialog, type DialogProps } from "@/components/dialog.tsx";
-import { Input } from "@/components/ui/input.tsx";
-import { useEffect, useState } from "react";
 import { useCalls } from "@/pages/user/CallsProvider.tsx";
-import { Button } from "@/components/ui/button.tsx";
-import type { CallType, Tag } from "@/api/types.tsx";
+import type { Tag } from "@/api/types.tsx";
 import { useTags } from "@/contexts/TagsProviders.tsx";
+import { useParams } from "react-router";
 
-type AssignTagDialogProps = DialogProps & {
-  call: CallType
-}
-
-export function AssignTagDialog(props: AssignTagDialogProps) {
-  const { assignTag } = useCalls()
+export function AssignTagDialog(props: DialogProps) {
+  const { id } = useParams()
+  const mutation = useCalls().assignTag(id)
   const { tags } = useTags()
 
   function assign(tag: Tag) {
-    assignTag(props.call.id, tag)
+    mutation.mutate(tag)
     props.onClose()
   }
 

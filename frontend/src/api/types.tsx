@@ -15,7 +15,7 @@ export type Task = {
   status: Status
 }
 
-export type CallType = {
+export type Call = {
   id: string,
   name: string,
   tags: Tag[]

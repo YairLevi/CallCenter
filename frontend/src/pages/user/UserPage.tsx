@@ -1,26 +1,17 @@
 import { Button } from "@/components/ui/button.tsx";
 import { useEffect, useState } from "react";
-import { type CallType } from '@/api/types'
+import { type Call as CallType } from '@/api/types'
 import { useCalls } from "@/pages/user/CallsProvider.tsx";
 import { AddCallDialog } from "@/pages/user/AddCallDialog.tsx";
 import { Call } from "@/pages/user/Call.tsx";
+import { Route, Routes, useNavigate } from "react-router";
 
 
 export function UserPage() {
   const [open, setOpen] = useState(false)
-  const [selectedCall, setSelectedCall] = useState<CallType>()
+  const [selectedCallID, setSelectedCallID] = useState('')
   const { calls } = useCalls()
-
-  useEffect(() => {
-    if (selectedCall == undefined)
-      return
-    const selectedID = selectedCall.id
-    const call = calls.find(c => c.id == selectedID)
-    if (call != undefined)
-      setSelectedCall(call)
-    else
-      setSelectedCall(null)
-  }, [calls])
+  const navigate = useNavigate()
 
   return (
     <>
@@ -33,7 +24,7 @@ export function UserPage() {
           <div className="flex flex-col overflow-auto gap-2">
             {
               calls?.map(call => (
-                <span key={call.id} onClick={() => setSelectedCall(call)} className="px-5 py-3 rounded-lg border-2 border-gray-200">{call.name}</span>
+                <span key={call.id} onClick={() => navigate(`/user/calls/${call.id}`)} className="px-5 py-3 rounded-lg border-2 border-gray-200">{call.name}</span>
               ))
             }
           </div>
@@ -41,11 +32,10 @@ export function UserPage() {
         <div className="border-1 border-gray-200 h-full"/>
 
         <div className="flex-1 h-full">
-          {
-            !selectedCall
-              ? <div className="h-full text-gray-400 select-none italic flex items-center justify-center" onClick={() => setOpen(true)}>Press here to create a new call...</div>
-              : <Call call={selectedCall} />
-          }
+          <Routes>
+            <Route path='/' element={<div className="h-full text-gray-400 select-none italic flex items-center justify-center" onClick={() => setOpen(true)}>Press here to create a new call...</div>}/>
+            <Route path='/calls/:id' element={<Call />}/>
+          </Routes>
         </div>
       </div>
 

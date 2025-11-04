@@ -3,8 +3,8 @@ import { Task } from "./tasks.model";
 
 
 export class CreateTaskDTO extends IntersectionType(
-  OmitType(Task, ['createdAt', 'updatedAt'] as const),
+  Task,
   class { callID: string }
 ) {}
 
-export class UpdateTaskDTO extends OmitType(Task, ['createdAt', 'updatedAt'] as const) {}
+export class UpdateTaskDTO extends Task {}

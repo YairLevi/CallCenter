@@ -33,7 +33,7 @@ function App() {
         <div className="w-8/10 h-8/10">
           <Routes>
             <Route path='/admin' element={<AdminPage/>}/>
-            <Route path='/user' element={
+            <Route path='/user/*' element={
               <CallsProvider>
                 <UserPage/>
               </CallsProvider>

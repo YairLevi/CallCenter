@@ -3,6 +3,7 @@ import { Model } from "mongoose";
 import { InjectModel } from "@nestjs/mongoose";
 import { Call, CallDocument } from "./calls.model";
 import { CreateCallDTO, UpdateCallDTO } from "./calls.dto";
+import { Task } from "../tasks/tasks.model";
 
 @Injectable()
 export class CallsService {
@@ -11,10 +12,16 @@ export class CallsService {
   ) {}
 
   async getAll(){
-    const populateField: keyof Call = 'tags'
     return await this.callModel
       .find()
-      .populate(populateField)
+      .exec()
+  }
+
+  async getSingle(id: string) {
+    const populateKeys: (keyof Call)[] = ['tags', 'tasks'];
+    return await this.callModel
+      .findOne({ _id: id })
+      .populate(populateKeys)
       .exec()
   }
 
@@ -22,15 +29,22 @@ export class CallsService {
     return await this.callModel.create(dto)
   }
 
-  async update(id: string, dto: UpdateCallDTO) {
-    return await this.callModel.findOneAndUpdate({
-      _id: id
-    }, {
-      ...dto,
-      updatedAt: new Date(),
-    }, {
-      new: true
-    }).exec()
+  async assignTag(id: string, tagID: string) {
+    await this.callModel.findOneAndUpdate(
+      { _id: id, },
+      { $push: { tags: tagID } },
+      { new: true }
+    ).exec()
+  }
+
+  async addTask(id: string, taskName: string) {
+    const task = new Task()
+    task.name = taskName
+    await this.callModel.findOneAndUpdate(
+      { _id: id, },
+      { $push: { tasks: task } },
+      { new: true }
+    ).exec()
   }
 
   async delete(id: string) {

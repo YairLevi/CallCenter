@@ -20,11 +20,6 @@ export class TasksController {
     private readonly tagsService: TasksService
   ) {}
 
-  @Get()
-  getAll() {
-    return this.tagsService.getAll()
-  }
-
   @Post()
   @HttpCode(HttpStatus.CREATED)
   create(@Body() dto: CreateTaskDTO) {

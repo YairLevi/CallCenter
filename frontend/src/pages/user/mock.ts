@@ -1,4 +1,4 @@
-import type { CallType } from "@/api/types"
+import type { Call } from "@/api/types"
 
 export enum Status {
   Open = "Open",
@@ -6,7 +6,7 @@ export enum Status {
   Completed = "Completed",
 }
 
-export const dummyCalls: CallType[] = [
+export const dummyCalls: Call[] = [
   {
     id: "call-1",
     name: "Client Onboarding - Acme Corp",

@@ -3,18 +3,16 @@ import { Input } from "@/components/ui/input.tsx";
 import { useState } from "react";
 import { Button } from "@/components/ui/button.tsx";
 import { useCalls } from "@/pages/user/CallsProvider.tsx";
-import type { CallType } from "@/api/types.tsx";
+import type { Call } from "@/api/types.tsx";
+import { useParams } from "react-router";
 
-type Props = DialogProps & {
-  call: CallType
-}
-
-export function AddTaskDialog(props: Props) {
+export function AddTaskDialog(props: DialogProps) {
+  const { id } = useParams()
   const [name, setName] = useState('')
-  const { addTask } = useCalls()
+  const mutation = useCalls().addTask(id)
 
   function submit() {
-    addTask(props.call.id, { name })
+    mutation.mutate(name)
     props.onClose()
   }
 

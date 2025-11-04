@@ -25,18 +25,25 @@ export class CallsController {
     return this.callService.getAll()
   }
 
+  @Get(':id')
+  getSingle(@Param('id') id: string) {
+    return this.callService.getSingle(id)
+  }
+
   @Post()
   @HttpCode(HttpStatus.CREATED)
   create(@Body() dto: CreateCallDTO) {
     return this.callService.create(dto)
   }
 
-  @Put(":id")
-  update(@Param("id") id: string, @Body() dto: UpdateCallDTO) {
-    if (!Types.ObjectId.isValid(id)) {
-      throw new BadRequestException(`Invalid ID value: ${id}`);
-    }
-    return this.callService.update(id, dto)
+  @Put(":id/tags")
+  assignTag(@Param('id') id: string, @Body() dto: { tagID: string }) {
+    return this.callService.assignTag(id, dto.tagID)
+  }
+
+  @Post(':id/tasks')
+  addTask(@Param('id') id: string, @Body() dto: { name: string }) {
+    return this.callService.addTask(id, dto.name)
   }
 
   @Delete(":id")

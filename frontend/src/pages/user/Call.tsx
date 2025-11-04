@@ -1,19 +1,23 @@
-import type { CallType, Task } from "@/api/types.tsx";
+import type { Task } from "@/api/types.tsx";
 import { Button } from "@/components/ui/button.tsx";
-import { AssignTagDialog } from "@/pages/user/AssignTagDialog.tsx";
 import { useState } from "react";
-import { ChangeTaskStatusDialog } from "@/pages/user/ChangeTaskStatusDialog.tsx";
+import { useCalls } from "@/pages/user/CallsProvider.tsx";
+import { useParams } from "react-router";
+import { AssignTagDialog } from "@/pages/user/AssignTagDialog.tsx";
 import { AddTaskDialog } from "@/pages/user/AddTaskDialog.tsx";
 
-export type CallProps = {
-  call: CallType
-}
-
-export function Call({ call }: CallProps) {
+export function Call() {
+  const { id } = useParams()
   const [open, setOpen] = useState(false)
   const [openStatusChanger, setOpenStatusChanger] = useState(false)
   const [openAddTask, setOpenAddTask] = useState(false)
   const [selectedTask, setSelectedTask] = useState<Task>()
+
+  const { data: call, isPending } = useCalls().single(id)
+
+
+  if (isPending)
+    return <div>Loading...</div>
 
   return <>
     <div className="flex flex-col h-full">
@@ -29,7 +33,7 @@ export function Call({ call }: CallProps) {
           </div>
         ))}
         <Button
-          className="bg-transparent text-black hover:bg-gray-200 rounded-xl px-4 py-1 text-sm whitespace-nowrap"
+          className="bg-transparent border-gray-300 border text-black hover:bg-gray-200 rounded-xl px-4 py-1 text-sm whitespace-nowrap"
           onClick={() => setOpen(true)}
         >
           + Add Tag
@@ -60,27 +64,25 @@ export function Call({ call }: CallProps) {
       </div>
     </div>
 
-    {selectedTask &&
-        <ChangeTaskStatusDialog
-            title={`Change status for task: ${selectedTask.name}`}
-            open={openStatusChanger}
-            call={call}
-            task={selectedTask}
-            onClose={() => setOpenStatusChanger(false)}
-        />}
+    {/*{selectedTask &&*/}
+    {/*    <ChangeTaskStatusDialog*/}
+    {/*        title={`Change status for task: ${selectedTask.name}`}*/}
+    {/*        open={openStatusChanger}*/}
+    {/*        call={id}*/}
+    {/*        task={selectedTask}*/}
+    {/*        onClose={() => setOpenStatusChanger(false)}*/}
+    {/*    />}*/}
 
     <AddTaskDialog
       open={openAddTask}
       onClose={() => setOpenAddTask(false)}
       title='Add New Task'
-      call={call}
     />
 
     <AssignTagDialog
       open={open}
       onClose={() => setOpen(false)}
       title='Assign Tag to Call'
-      call={call}
     />
   </>
 }
