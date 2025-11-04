@@ -1,33 +1,28 @@
 import { useState } from "react"
 import { Button } from "@/components/ui/button.tsx";
 import { Input } from "@/components/ui/input.tsx";
-import { useTags } from "@/api/useTags.tsx";
 import { Dialog } from "@/components/dialog.tsx";
 import type { Tag } from "@/api/types.tsx";
+import { useTags } from "@/contexts/TagsProviders.tsx";
 
 export function AdminPage() {
   const [open, setOpen] = useState(false)
   const [name, setName] = useState("")
-  const { tags, addTag, editTag } = useTags()
+  const { tags, add, edit } = useTags()
 
   function onAddTag() {
     if (name.length == 0)
       return
-    addTag({ name })
+    add({ name })
     setName('')
   }
 
   const [toEdit, setToEdit] = useState<Tag>()
   const [editedName, setEditedName] = useState('')
-  function onEditTag(tag: Tag) {
-    setToEdit(tag)
-    setEditedName(tag.name)
-    setOpen(true)
-  }
 
   function onCloseEditing() {
     toEdit.name = editedName
-    editTag(toEdit)
+    edit(toEdit)
     setOpen(false)
   }
 
@@ -49,7 +44,7 @@ export function AdminPage() {
           {tags.map(tag => (
             <li key={tag.id} className="mb-1 border border-gray-300 rounded-md p-4 flex justify-between items-center">
               <p>{tag.name}</p>
-              <Button onClick={() => onEditTag(tag)}>Edit</Button>
+              <Button onClick={() => edit(tag)}>Edit</Button>
             </li>
           ))}
         </ul>

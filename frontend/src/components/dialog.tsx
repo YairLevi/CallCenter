@@ -1,8 +1,8 @@
-import React, { type PropsWithChildren, useState } from "react";
+import React, { type PropsWithChildren } from "react";
 import { XIcon } from 'lucide-react'
 import { cn } from "@/lib/utils.ts";
 
-export interface ModalProps extends PropsWithChildren {
+export interface DialogProps extends PropsWithChildren {
   open: boolean
   onClose: () => void
   title?: string
@@ -25,7 +25,7 @@ export function Footer({ children }: PropsWithChildren) {
   )
 }
 
-export function Dialog({ open, onClose, title, children }: ModalProps) {
+export function Dialog({ open, onClose, title, children }: DialogProps) {
   return (
     <div
       onClick={onClose}
@@ -37,7 +37,7 @@ export function Dialog({ open, onClose, title, children }: ModalProps) {
       <div
         onClick={e => e.stopPropagation()}
         className={cn(
-          'p-5 bg-neutral-800 shadow-xl rounded-lg w-1/4 min-w-[20rem] h-fit duration-150 ease-in-out',
+          'p-5 bg-neutral-800 shadow-xl rounded-lg w-1/4 min-w-[20rem] max-h-screen overflow-auto duration-150 ease-in-out',
           open ? 'opacity-100 scale-100' : 'opacity-0 scale-95',
         )}
       >

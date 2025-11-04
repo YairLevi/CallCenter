@@ -3,6 +3,8 @@ import './App.css'
 import { AdminPage } from "./pages/admin";
 import { Button } from "@/components/ui/button.tsx";
 import { UserPage } from "@/pages/user";
+import { CallsProvider } from "@/pages/user/CallsProvider.tsx";
+import { TagsProvider } from "@/contexts/TagsProviders.tsx";
 
 function App() {
   const location = useLocation()
@@ -23,13 +25,19 @@ function App() {
           onClick={() => navigate('/user')}
         >User</Button>
       </div>
-      <div className="w-8/10 h-8/10 bg-amber-50">
-        <Routes>
-          <Route path='/admin' element={<AdminPage/>}/>
-          <Route path='/user' element={<UserPage/>}/>
-          <Route path='*' element={<div>Unknown. Please select the user page or admin page!</div>}/>
-        </Routes>
-      </div>
+      <TagsProvider>
+        <div className="w-8/10 h-8/10">
+          <Routes>
+            <Route path='/admin' element={<AdminPage/>}/>
+            <Route path='/user' element={
+              <CallsProvider>
+                <UserPage/>
+              </CallsProvider>
+            }/>
+            <Route path='*' element={<div>Unknown. Please select the user page or admin page!</div>}/>
+          </Routes>
+        </div>
+      </TagsProvider>
     </div>
   )
 }
