@@ -45,5 +45,6 @@ export class TasksController {
   async delete(@Param("id") id: string) {
     if (!await this.taskService.delete(id))
       throw new BadRequestException('Failed to delete chosen task')
+    await this.callAssignmentService.removeTaskFromCall(id)
   }
 }

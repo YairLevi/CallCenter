@@ -26,4 +26,12 @@ export class CallAssignmentService {
       { $set: { updatedAt: new Date() } },
     );
   }
+
+  async removeTaskFromCall(taskID: string) {
+    await this.callModel.findOneAndUpdate(
+      { _id: taskID },
+      { $pull: { tasks: taskID } }
+    )
+    await this.taskModel.deleteOne({ _id: taskID });
+  }
 }

@@ -45,6 +45,10 @@ export class CallsController {
 
   @Delete(':id')
   async deleteCall(@Param('id') id: string) {
+    const call = await this.callService.getSingle(id)
+    for (const taskID in call.tasks) {
+      await this.callAssignmentService.removeTaskFromCall(taskID)
+    }
     await this.callService.deleteCall(id)
   }
 
