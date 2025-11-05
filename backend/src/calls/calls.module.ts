@@ -10,5 +10,6 @@ import { MongooseModule, SchemaFactory } from "@nestjs/mongoose";
   ],
   controllers: [CallsController],
   providers: [CallsService],
+  exports: [CallsService],
 })
 export class CallsModule {}

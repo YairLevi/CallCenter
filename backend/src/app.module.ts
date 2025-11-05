@@ -4,6 +4,7 @@ import { MongooseModule } from "@nestjs/mongoose";
 import { TagsModule } from './tags/tags.module';
 import { TasksModule } from './tasks/tasks.module';
 import { ConfigModule, ConfigService } from "@nestjs/config";
+import { SuggestedTasksModule } from './suggested-tasks/suggested-tasks.module';
 
 @Module({
   imports: [
@@ -21,6 +22,7 @@ import { ConfigModule, ConfigService } from "@nestjs/config";
     CallsModule,
     TagsModule,
     TasksModule,
+    SuggestedTasksModule,
   ],
 })
 export class AppModule {}
