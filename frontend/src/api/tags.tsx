@@ -25,9 +25,15 @@ export function useTagsQueries() {
     onSettled: () => queryClient.invalidateQueries({ queryKey: queryKeys.all() })
   })
 
+  const deleteTag = useMutation({
+    mutationFn: (dto: { tagID: string }) => axios.delete(`tags/${dto.tagID}`),
+    onSettled: () => queryClient.invalidateQueries({ queryKey: queryKeys.all() })
+  })
+
   return {
     getAll,
     add,
-    edit
+    edit,
+    deleteTag
   }
 }

@@ -55,7 +55,7 @@ export class CallsController {
   @Delete(':id/tags/:tagID')
   deleteTag(@Param('id') id: string, @Param('tagID') tagID: string) {
     try {
-      return this.callService.deleteTag(id, tagID)
+      return this.callService.removeTag(id, tagID)
     }
     catch (e) {
       throw new BadRequestException('Failed to delete tag.')

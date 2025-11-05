@@ -1,12 +1,14 @@
 import { createContext, type PropsWithChildren, use, useContext, useEffect, useState } from "react";
 import type { Tag } from "@/api/types";
 import { useTagsQueries } from "@/api/tags.tsx";
+import type { UseMutationResult } from "@tanstack/react-query";
 
 
 type ContextExports = {
   tags: Tag[]
   add: (tag: Partial<Tag>) => void
   edit: (tag: Tag) => void
+  deleteTag: UseMutationResult
 }
 
 const Context = createContext<ContextExports>({} as ContextExports)
@@ -28,6 +30,7 @@ export function TagsProvider({ children }: PropsWithChildren) {
     tags: queries.getAll.data,
     add: (tag: Partial<Tag>) => queries.add.mutate(tag.name),
     edit: (tag: Tag) => queries.edit.mutate({ tagID: tag.id, newName: tag.name }),
+    deleteTag: queries.deleteTag
   }
 
   return (

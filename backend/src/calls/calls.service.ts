@@ -50,7 +50,7 @@ export class CallsService {
     ).exec();
   }
 
-  async deleteTag(id: string, tagID: string) {
+  async removeTag(id: string, tagID: string) {
     return await this.callModel.findOneAndUpdate(
       { _id: id },
       { $pull: { tags: tagID }},
