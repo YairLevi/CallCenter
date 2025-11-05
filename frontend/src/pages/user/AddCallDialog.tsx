@@ -10,6 +10,7 @@ export function AddCallDialog(props: DialogProps) {
 
   function submit() {
     add({ name })
+    setName('')
     props.onClose()
   }
 

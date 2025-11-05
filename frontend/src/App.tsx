@@ -10,8 +10,9 @@ function App() {
   const location = useLocation()
   const navigate = useNavigate()
 
-  const isAdmin = location.pathname.endsWith('admin')
-  const isUser = location.pathname.endsWith('user')
+  // could be more dynamic, but for the sake of speed.
+  const isAdmin = location.pathname.startsWith('admin')
+  const isUser = location.pathname.startsWith('/user')
 
   return (
     <div className="flex flex-col justify-center items-center h-screen">

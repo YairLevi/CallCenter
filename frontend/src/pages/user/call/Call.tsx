@@ -3,9 +3,10 @@ import { Button } from "@/components/ui/button.tsx";
 import { useState } from "react";
 import { useCalls } from "@/pages/user/CallsProvider.tsx";
 import { useParams } from "react-router";
-import { AssignTagDialog } from "@/pages/user/AssignTagDialog.tsx";
-import { AddTaskDialog } from "@/pages/user/AddTaskDialog.tsx";
-import { ChangeTaskStatusDialog } from "@/pages/user/ChangeTaskStatusDialog.tsx";
+import { AssignTagDialog } from "@/pages/user/call/AssignTagDialog.tsx";
+import { AddTaskDialog } from "@/pages/user/call/AddTaskDialog.tsx";
+import { ChangeTaskStatusDialog } from "@/pages/user/call/ChangeTaskStatusDialog.tsx";
+import { Placeholder } from "@/components/placeholder.tsx";
 
 export function Call() {
   const [open, setOpen] = useState(false)
@@ -22,7 +23,7 @@ export function Call() {
 
   return <>
     <div className="flex flex-col h-full">
-      <h1 className="font-semibold text-xl">Call: {call.name}</h1>
+      <h1 className="font-semibold text-xl">Selected Call: {call.name}</h1>
       <p className="font-bold mt-5">Tags:</p>
       <div className="flex flex-wrap gap-2 my-3 items-center">
         {call?.tags?.map(tag => (
@@ -47,20 +48,23 @@ export function Call() {
           <Button onClick={() => setOpenAddTask(true)}>Add Task</Button>
         </div>
 
-        <div className="flex flex-col gap-2 mt-10 overflow-auto h-2/3">
-          {call?.tasks?.sort((task1, task2) => task1.name.localeCompare(task2.name))
-            .map(task => (
-              <div
-                key={task.id}
-                className="px-5 py-3 rounded-lg border-2 justify-between border-gray-200 flex items-center"
-              >
-                <span>{task.name}</span>
-                <span onClick={() => {
-                  setSelectedTask(task);
-                  setOpenStatusChanger(true)
-                }}>{task.status}</span>
-              </div>
-            ))}
+        <div className="flex flex-col gap-2 mt-10 overflow-auto h-2/3 mb-20">
+          {
+            !call?.tasks || call?.tasks.length == 0
+              ? <Placeholder text='No tasks have been created for this call.'/>
+              : call?.tasks?.sort((task1, task2) => task1.name.localeCompare(task2.name))
+                .map(task => (
+                  <div
+                    key={task.id}
+                    className="px-5 py-3 rounded-lg border-2 justify-between border-gray-200 flex items-center"
+                  >
+                    <span className='font-semibold'>{task.name}</span>
+                    <span className="cursor-pointer text-sm" onClick={() => {
+                      setSelectedTask(task);
+                      setOpenStatusChanger(true)
+                    }}>{task.status}</span>
+                  </div>
+                ))}
         </div>
       </div>
     </div>
