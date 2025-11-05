@@ -1,11 +1,24 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
+import { ConfigModule } from "@nestjs/config";
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.setGlobalPrefix('/api/v1')
 
-  app.enableCors() // for testing purposes}
-  await app.listen(3000);
+  const nodeEnv = process.env.NODE_ENV || 'development';
+  const port = process.env.PORT || (nodeEnv === 'production' ? 80 : 3000);
+
+  // CORS configuration based on environment
+  let allowedOrigin = 'all'
+  if (nodeEnv === 'development') {
+    app.enableCors();
+  } else {
+    allowedOrigin = process.env.CORS_ORIGIN || 'http://localhost';
+    app.enableCors({ origin: [allowedOrigin] });
+  }
+
+  console.log(`NEST application running on port: ${port}, allowing access using cors from: ${allowedOrigin}`)
+  await app.listen(port);
 }
 bootstrap();
