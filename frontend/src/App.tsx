@@ -16,24 +16,15 @@ function App() {
   const isUser = location.pathname.startsWith('/user')
 
   return (
-    <div className="flex flex-col justify-center items-center h-screen">
-      <div className="flex items-center mb-20">
-        <Button
-          className={`cursor-pointer rounded-r-none border-r-2 ${isAdmin ? 'bg-sky-700' : 'bg-neutral-700'}`}
-          onClick={() => navigate('/admin')}
-        >
-          Admin
-        </Button>
-        <Button
-          className={`cursor-pointer rounded-l-none border-l-0 ${isUser ? 'bg-sky-700' : 'bg-neutral-700'}`}
-          onClick={() => navigate('/user')}
-        >
-          User
-        </Button>
+    <div className="flex flex-col justify-center h-screen">
+      <div className="flex mb-10 px-20 border-b-1 border-gray-300 items-center gap-10 pb-5 -mt-5">
+        <h1 className='text-3xl font-bold italic mr-20'>Oopsify!</h1>
+        <Button className='text-xl' variant='ghost' onClick={() => navigate('/admin')}>Admin</Button>
+        <Button className='text-xl' variant='ghost' onClick={() => navigate('/user')}>User</Button>
       </div>
       <TagsProvider>
         <SuggestedTasksProvider>
-          <div className="w-8/10 h-8/10">
+          <div className="w-8/10 h-8/10 self-center">
             <Routes>
               <Route path='/admin' element={<AdminPage/>}/>
               <Route path='/user/*' element={
