@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Patch, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Post } from '@nestjs/common';
 import { SuggestedTasksService } from "./suggested-tasks.service";
 import { AssignTagDTO, CreateSuggestedTaskDTO } from "./suggested-tasks.dto";
 import { TasksService } from "../tasks/tasks.service";
@@ -26,6 +26,11 @@ export class SuggestedTasksController {
   @Patch(':id/tags')
   async assignTag(@Param('id') id: string, @Body() dto: AssignTagDTO) {
     return await this.suggestedTasksService.addTag(id, dto)
+  }
+
+  @Delete(':id/tags/:tagID')
+  async removeTag(@Param('id') id: string, @Param('tagID') tagID: string) {
+    return await this.suggestedTasksService.removeTag(id, tagID)
   }
 
   @Patch(':id/tasks')

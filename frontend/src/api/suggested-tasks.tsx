@@ -25,6 +25,11 @@ export function useSuggestedTasksQuery() {
     onSettled: () => queryClient.invalidateQueries({ queryKey: queryKeys.getAll() }) // not very optimized, but enough for now.
   })
 
+  const removeTag = useMutation({
+    mutationFn: (dto: { suggestionID: string, tagID: string }) => axios.delete(`/suggested-tasks/${dto.suggestionID}/tags/${dto.tagID}`),
+    onSettled: () => queryClient.invalidateQueries({ queryKey: queryKeys.getAll() }) // not very optimized, but enough for now.
+  })
+
   const update = (suggestedTaskID: string) => useMutation({
     mutationFn: (dto: { name: string }) => axios.patch(`/suggested-tasks/${suggestedTaskID}/tasks`, dto),
     onSettled: () => queryClient.invalidateQueries({ queryKey: queryKeys.getAll() })
@@ -43,6 +48,7 @@ export function useSuggestedTasksQuery() {
     add,
     assign,
     update,
-    assignTaskToCall
+    assignTaskToCall,
+    removeTag
   }
 }

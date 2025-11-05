@@ -13,7 +13,7 @@ type State = 'Loading' | 'Done'
 
 export function SuggestedTasksSection() {
   const [name, setName] = useState('')
-  const { add, suggestedTasks, assign, update } = useSuggestedTasks()
+  const { add, suggestedTasks, assign, update, removeTag } = useSuggestedTasks()
   const assignTagDialog = useDialogProps()
   const { tags } = useTags()
 
@@ -81,7 +81,7 @@ export function SuggestedTasksSection() {
 
                 <div className="flex flex-wrap gap-2 my-3 items-center">
                   {suggestion.tags.map(tag => (
-                    <Badge key={tag.id} tag={tag} onDelete={() => {}}/>
+                    <Badge key={tag.id} tag={tag} onDelete={() => removeTag.mutate({ suggestionID: suggestion.id, tagID: tag.id })}/>
                   ))}
                   <Button
                     className="bg-transparent border-gray-300 border text-black hover:bg-gray-200 rounded-xl px-4 py-1 text-sm whitespace-nowrap"

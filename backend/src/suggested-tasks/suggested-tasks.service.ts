@@ -41,6 +41,14 @@ export class SuggestedTasksService {
     ).exec()
   }
 
+  async removeTag(id: string, tagID: string) {
+    return await this.model.findOneAndUpdate(
+      { _id: id },
+      { $pull: { tags: tagID }},
+      { new: true}
+    ).exec()
+  }
+
   async assignToCall(suggestedTaskID: string, callID: string) {
     await this.model.findOneAndUpdate(
       { _id: suggestedTaskID },
