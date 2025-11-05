@@ -22,8 +22,9 @@ export function Call() {
   const { id } = useParams()
   const { tags } = useTags()
 
-  const { delete: deleteCall, single } = useCalls()
+  const { delete: deleteCall, single, deleteTag } = useCalls()
   const { data: call, isPending, isError } = single(id)
+  const deleteTagMutation = deleteTag(id)
 
   const [selectedTask, setSelectedTask] = useState<Task>()
 
@@ -37,8 +38,7 @@ export function Call() {
     return <div>Loading...</div>
   if (isError)
     return <div>Error getting tasks for call</div>
-  if (!call)
-    return <div>Failed to select current call. Try to refresh the page</div>
+
 
   return <>
     <div className="flex flex-col h-full">
@@ -48,7 +48,7 @@ export function Call() {
       </div>
       <p className="font-bold mt-5">Tags:</p>
       <div className="flex flex-wrap gap-2 my-3 items-center">
-        {call.tags?.map(tag => <Badge key={tag.id} tag={tag} />)}
+        {call.tags?.map(tag => <Badge key={tag.id} tag={tag} onDelete={() => deleteTagMutation.mutate({ tagID: tag.id })} />)}
         <Button variant='outline' onClick={() => setOpen(true)}>
           + Add Tag
         </Button>

@@ -36,7 +36,10 @@ export function useCallsQueries() {
     onSettled: () => queryClient.invalidateQueries({ queryKey: queryKeys.single(callID) })
   })
 
-
+  const deleteTag = (callID: string) => useMutation({
+    mutationFn: (dto: { tagID: string }) => axios.delete(`/calls/${callID}/tags/${dto.tagID}`),
+    onSettled: () => queryClient.invalidateQueries({ queryKey: queryKeys.single(callID) })
+  })
 
   const edit = useMutation({
     mutationFn: ({ tagID, newName }: {
@@ -53,5 +56,6 @@ export function useCallsQueries() {
     add,
     deleteCall,
     edit,
+    deleteTag
   }
 }

@@ -12,6 +12,7 @@ type ContextExports = {
   delete: UseMutationResult
   addTask: (callID: string) => UseMutationResult
   assignTag: (callID: string) => UseMutationResult
+  deleteTag: (callID: string) => UseMutationResult
   changeTaskStatus: (taskID: string, callID: string) => UseMutationResult,
 }
 
@@ -38,7 +39,8 @@ export function CallsProvider({ children }: PropsWithChildren) {
     assignTag: callQueries.assignTag,
     addTask: taskQueries.addTask,
     changeTaskStatus: taskQueries.changeTaskStatus,
-    delete: callQueries.deleteCall
+    delete: callQueries.deleteCall,
+    deleteTag: (callID) => callQueries.deleteTag(callID)
   }
 
   return (
