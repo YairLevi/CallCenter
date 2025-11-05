@@ -61,7 +61,21 @@ export function TagsSection() {
               </li>
             ))}
       </div>
-      {toEdit && <Dialog open={editDialog.isOpen} onClose={editDialog.close} title='Rename Tag'> <Dialog.Group> <Input className="text-white" value={editedName} onChange={e => setEditedName(e.target.value)}/> </Dialog.Group> <Dialog.Footer> <Button onClick={onCloseEditing}>Submit</Button> </Dialog.Footer> </Dialog>}
+      {
+        toEdit &&
+          <Dialog open={editDialog.isOpen}
+                  onClose={editDialog.close}
+                  title='Rename Tag'>
+              <Dialog.Group>
+                  <Input className="text-white"
+                         value={editedName}
+                         onChange={e => setEditedName(e.target.value)}/>
+              </Dialog.Group>
+              <Dialog.Footer>
+                  <Button onClick={onCloseEditing}>Submit</Button>
+              </Dialog.Footer>
+          </Dialog>
+      }
     </div>
   )
 }
