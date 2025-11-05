@@ -56,9 +56,9 @@ export function AdminPage() {
                   .sort((t1, t2) => t1.name.localeCompare(t2.name))
                   .map(tag => (
                     <li key={tag.id}
-                        className="mb-1 border border-gray-300 rounded-md p-4 flex justify-between items-center">
+                        className="mb-1 group border border-gray-300 rounded-md p-4 flex justify-between items-center">
                       <p>{tag.name}</p>
-                      <Button onClick={() => onOpenEditing(tag)}>Edit</Button>
+                      <Button className="invisible group-hover:visible" onClick={() => onOpenEditing(tag)}>Edit</Button>
                     </li>
                   ))}
           </ul>
