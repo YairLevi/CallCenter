@@ -28,6 +28,8 @@ export function TagsSection() {
   }
 
   function onCloseEditing() {
+    if (editedName.length == 0)
+      return
     edit({ ...toEdit, name: editedName })
     editDialog.close()
   }
