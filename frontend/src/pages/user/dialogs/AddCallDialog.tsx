@@ -9,6 +9,8 @@ export function AddCallDialog(props: DialogProps) {
   const { add } = useCalls()
 
   function submit() {
+    if (name.length == 0)
+      return
     add({ name })
     setName('')
     props.onClose()

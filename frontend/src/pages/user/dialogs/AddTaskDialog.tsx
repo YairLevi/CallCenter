@@ -12,6 +12,8 @@ export function AddTaskDialog(props: DialogProps) {
   const mutation = useCalls().addTask(id)
 
   function submit() {
+    if (name.length == 0)
+      return
     mutation.mutate(name)
     props.onClose()
   }
