@@ -11,6 +11,7 @@ import { Badge } from "@/components/badge.tsx";
 import { AssignSuggestedTaskDialog } from "@/pages/user/dialogs/AssignSuggestedTaskDialog.tsx";
 import { useDialogProps } from "@/components/dialog.tsx";
 import { useTags } from "@/contexts/TagsProviders.tsx";
+import { X } from "lucide-react";
 
 export function Call() {
   const navigate =  useNavigate()
@@ -22,10 +23,10 @@ export function Call() {
   const { id } = useParams()
   const { tags } = useTags()
 
-  const { delete: deleteCall, single, deleteTag } = useCalls()
+  const { delete: deleteCall, single, deleteTag, deleteTask } = useCalls()
   const { data: call, isPending, isError } = single(id)
   const deleteTagMutation = deleteTag(id)
-
+  const deleteTaskMutation = deleteTask(id)
   const [selectedTask, setSelectedTask] = useState<Task>()
 
 
@@ -77,9 +78,17 @@ export function Call() {
                 .map(task => (
                   <div
                     key={task.id}
-                    className="px-5 py-3 rounded-lg border-2 justify-between border-gray-200 flex items-center"
+                    className="group px-5 py-3 rounded-lg border-2 justify-between border-gray-200 flex items-center"
                   >
-                    <span className='font-semibold'>{task.name}</span>
+                    <div className='flex items-center gap-2'>
+                      <div
+                        className={`rounded-lg hover:bg-neutral-200 p-1 opacity-0 group-hover:opacity-100 w-0 group-hover:w-6 transition-all duration-150 ease-out`}
+                        onClick={() => deleteTaskMutation.mutate({ taskID: task.id })}
+                      >
+                        <X size={16} />
+                      </div>
+                      <span className='font-semibold'>{task.name}</span>
+                    </div>
                     <span className="cursor-pointer text-sm" onClick={() => {
                       setSelectedTask(task);
                       setOpenStatusChanger(true)

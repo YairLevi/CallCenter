@@ -11,6 +11,7 @@ type ContextExports = {
   add: (call: Partial<Call>) => void
   delete: UseMutationResult
   addTask: (callID: string) => UseMutationResult
+  deleteTask: (callID: string) => UseMutationResult
   assignTag: (callID: string) => UseMutationResult
   deleteTag: (callID: string) => UseMutationResult
   changeTaskStatus: (taskID: string, callID: string) => UseMutationResult,
@@ -38,6 +39,7 @@ export function CallsProvider({ children }: PropsWithChildren) {
     add: (call: Partial<Call>) => callQueries.add.mutate(call.name),
     assignTag: callQueries.assignTag,
     addTask: taskQueries.addTask,
+    deleteTask: (callID) => taskQueries.deleteTask(callID),
     changeTaskStatus: taskQueries.changeTaskStatus,
     delete: callQueries.deleteCall,
     deleteTag: (callID) => callQueries.deleteTag(callID)

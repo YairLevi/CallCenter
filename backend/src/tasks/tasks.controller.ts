@@ -40,12 +40,10 @@ export class TasksController {
     return task
   }
 
-  // @Delete(":id")
-  // @HttpCode(HttpStatus.NO_CONTENT)
-  // async delete(@Param("id") id: string) {
-  //   if (!Types.ObjectId.isValid(id)) {
-  //     throw new BadRequestException(`Invalid ID value: ${id}`);
-  //   }
-  //   await this.taskService.delete(id)
-  // }
+  @Delete(":id")
+  @HttpCode(HttpStatus.NO_CONTENT)
+  async delete(@Param("id") id: string) {
+    if (!await this.taskService.delete(id))
+      throw new BadRequestException('Failed to delete chosen task')
+  }
 }

@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectModel } from "@nestjs/mongoose";
 import { Model } from "mongoose";
 import { Task, TaskDocument } from "./tasks.model";
@@ -27,6 +27,7 @@ export class TasksService {
   }
 
   async delete(id: string) {
-    return await this.taskModel.deleteOne({ _id: id }).exec()
+    const result = await this.taskModel.deleteOne({ _id: id }).exec()
+    return result.acknowledged && result.deletedCount > 0
   }
 }

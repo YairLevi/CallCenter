@@ -16,8 +16,14 @@ export function useTasksQueries() {
     onSettled: () => queryClient.invalidateQueries({ queryKey: queryKeys.single(callID) })
   })
 
+  const deleteTask = (callID: string) => useMutation({
+    mutationFn: (dto: { taskID: string }) => axios.delete(`/tasks/${dto.taskID}`),
+    onSettled: () => queryClient.invalidateQueries({ queryKey: queryKeys.single(callID) })
+  })
+
   return {
+    addTask,
+    deleteTask,
     changeTaskStatus,
-    addTask
   }
 }
