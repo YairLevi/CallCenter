@@ -8,19 +8,16 @@ import './App.css'
 import { SuggestedTasksProvider } from "@/contexts/SuggestedTasksProvider.tsx";
 
 function App() {
-  const location = useLocation()
   const navigate = useNavigate()
-
-  // could be more dynamic, but for the sake of speed.
-  const isAdmin = location.pathname.startsWith('admin')
-  const isUser = location.pathname.startsWith('/user')
 
   return (
     <div className="flex flex-col justify-center h-screen">
-      <div className="flex mb-10 px-20 border-b-1 border-gray-300 items-center gap-10 pb-5 -mt-5">
-        <h1 className='text-3xl font-bold italic mr-20'>Oopsify!</h1>
-        <Button className='text-xl' variant='ghost' onClick={() => navigate('/admin')}>Admin</Button>
-        <Button className='text-xl' variant='ghost' onClick={() => navigate('/user')}>User</Button>
+      <div className="flex flex-col md:flex-row mb-10 px-4 md:px-20 border-b border-gray-300 items-start md:items-center gap-4 md:gap-10 pb-5 -mt-5">
+        <h1 className='text-2xl md:text-3xl font-bold italic'>Oopsify!</h1>
+        <div className="flex gap-4 md:gap-6">
+          <Button className='text-lg md:text-xl' variant='ghost' onClick={() => navigate('/admin')}>Admin</Button>
+          <Button className='text-lg md:text-xl' variant='ghost' onClick={() => navigate('/user')}>User</Button>
+        </div>
       </div>
       <TagsProvider>
         <SuggestedTasksProvider>
