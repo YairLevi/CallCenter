@@ -22,6 +22,6 @@ RUN npm install --only=production
 # Copy the built application from the builder stage
 COPY --from=builder /app/dist ./dist
 
-EXPOSE 3000
+EXPOSE 80
 
 CMD ["node", "dist/main"]
