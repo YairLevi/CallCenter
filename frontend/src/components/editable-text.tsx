@@ -90,11 +90,7 @@ export function EditableText({ initialValue, onSave, onEdit }: EditableTextProps
           <span className="text-sm">
             {value || <em className="text-gray-400">empty</em>}
           </span>
-          <button
-            onClick={handleStartEdit}
-            className="opacity-0 group-hover:opacity-100 transition-opacity p-1 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded"
-            title="Edit"
-          >
+          <button onClick={handleStartEdit} title="Edit">
             <Pencil size={14} />
           </button>
         </>
