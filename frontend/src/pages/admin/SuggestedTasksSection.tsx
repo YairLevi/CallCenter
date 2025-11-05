@@ -49,6 +49,11 @@ export function SuggestedTasksSection() {
     assignTagDialog.open()
   }
 
+  function onUpdate(name: string) {
+    if (name.length == 0)
+      return
+    updateSuggestion.mutate({ name })
+  }
 
 
   if (suggestedTasks.isPending)
@@ -83,7 +88,7 @@ export function SuggestedTasksSection() {
                   <EditableText
                     initialValue={suggestion.task.name}
                     onEdit={() => setSelectedTask(suggestion)}
-                    onSave={(updatedName) => updateSuggestion.mutate({ name: updatedName })}
+                    onSave={(updatedName) => onUpdate(updatedName)}
                   />
 
                   {!!suggestion.assignedTo
