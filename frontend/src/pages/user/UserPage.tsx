@@ -33,8 +33,8 @@ export function UserPage() {
               displayedCalls.length == 0
                 ? <Placeholder text='Found no matching calls.'/>
                 : displayedCalls.map(call => (
-                  <div key={call.id} className="px-5 py-3 rounded-lg border-2 border-gray-200 flex justify-between items-center gap-3">
-                    <span className='text-ellipsis line-clamp-2' onClick={() => navigate(`/user/calls/${call.id}`)}>{call.name}</span>
+                  <div key={call.id} className="cursor-pointer px-5 py-3 rounded-lg border-2 border-gray-200 flex justify-between items-center gap-3" onClick={() => navigate(`/user/calls/${call.id}`)}>
+                    <span className='text-ellipsis line-clamp-2'>{call.name}</span>
                     <div className="flex flex-col *:text-xs *:text-gray-500 min-w-20 max-w-20">
                       <p className='text-xs'>Last update: </p>
                       <span>{new Date(call.updatedAt).toLocaleString()}</span>

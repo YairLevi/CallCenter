@@ -13,8 +13,8 @@ export function AssignSuggestedTaskDialog(props: Props) {
   const { assignTaskToCall, suggestedTasks } = useSuggestedTasks()
   const mutation = assignTaskToCall(id)
 
-  function assign(taskID: string) {
-    mutation.mutate({ suggestedTaskID: taskID })
+  function assign(suggestionID: string) {
+    mutation.mutate({ suggestionID })
     props.onClose()
   }
 
@@ -23,14 +23,14 @@ export function AssignSuggestedTaskDialog(props: Props) {
   if (suggestedTasks.isError)
     return <div>Error happened while trying to fetch suggested tasks.</div>
 
-  const matchingTasks = suggestedTasks.data.filter(task => task.tags
+  const matchingTasks = suggestedTasks.data.filter(suggestion => suggestion.tags
     .map(t=>t.id)
     .some(tag => props.tags
       .map(t=>t.id)
       .includes(tag)
     )
     &&
-    !task.assigned
+    !suggestion.assignedTo
   )
 
   return (
@@ -41,14 +41,14 @@ export function AssignSuggestedTaskDialog(props: Props) {
             matchingTasks.length == 0
               ? <Placeholder text="Could not find a suggested task with any of this call's tags."/>
               : matchingTasks
-                .sort((t1, t2) => t1.name.localeCompare(t2.name))
-                .map(task => (
+                .sort((t1, t2) => t1.task.name.localeCompare(t2.task.name))
+                .map(suggestion => (
                   <div
-                    key={task.id}
+                    key={suggestion.id}
                     className="min-w-fit flex items-center bg-gray-600 text-white border border-gray-500 rounded-xl px-4 py-2 text-sm cursor-pointer hover:bg-gray-500 transition-colors whitespace-nowrap"
-                    onClick={() => assign(task.id)}
+                    onClick={() => assign(suggestion.id)}
                   >
-                    {task.name}
+                    {suggestion.task.name}
                   </div>
                 ))}
         </div>

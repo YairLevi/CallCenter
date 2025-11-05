@@ -28,12 +28,18 @@ export class SuggestedTasksController {
     return await this.suggestedTasksService.addTag(id, dto)
   }
 
+  @Patch(':id/tasks')
+  async rename(@Param('id') id: string, @Body() dto: { name: string }) {
+    const suggestion = await this.suggestedTasksService.getByID(id)
+    await this.taskService.update(suggestion.task.toString(), dto)
+  }
+
   @Patch(':id/calls')
-  async assignToCall(@Param('id') suggestedTaskID: string, @Body() callID: string) {
+  async assignToCall(@Param('id') suggestedTaskID: string, @Body() dto: { assignToCallID: string }) {
     const suggestion = await this.suggestedTasksService.getByID(suggestedTaskID)
     const task = await this.taskService.getByID(suggestion.task.toString())
-    await this.callService.addTask(callID, task.id)
-    await this.taskService.update(task.id, { call: callID as any, status: 'Open' })
-    await this.suggestedTasksService.assignToCall(suggestedTaskID, callID)
+    await this.callService.addTask(dto.assignToCallID, task.id)
+    await this.taskService.update(task.id, { call: dto.assignToCallID as any, status: 'Open' })
+    await this.suggestedTasksService.assignToCall(suggestedTaskID, dto.assignToCallID)
   }
 }

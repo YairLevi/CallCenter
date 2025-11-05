@@ -1,6 +1,6 @@
 import { Input } from "@/components/ui/input.tsx";
 import { Button } from "@/components/ui/button.tsx";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useSuggestedTasks } from "@/contexts/SuggestedTasksProvider.tsx";
 import { useTags } from "@/contexts/TagsProviders.tsx";
 import { Badge } from "@/components/badge.tsx";
@@ -21,6 +21,8 @@ export function SuggestedTasksSection() {
   const [selectedTask, setSelectedTask] = useState<SuggestedTask>()
   const { mutate } = assign(selectedTask?.id)
   const { mutate: mutateName } = update(selectedTask?.id)
+
+  useEffect(() => console.log('a'))
 
   function onAddTask() {
     if (name.length == 0)
@@ -61,55 +63,37 @@ export function SuggestedTasksSection() {
         {
           suggestedTasks?.data.length == 0
             ? <Placeholder text='No suggested tasks exist yet.'/>
-            : suggestedTasks.data.map(task => (
+            : suggestedTasks.data.map(suggestion => { console.log(suggestion); return (
               <div
-                key={task.id}
-                className={`px-5 py-3 rounded-lg border border-gray-300 flex flex-col justify-between items-start transition ${task.assigned ? 'opacity-30 -z-100 pointer-events-none' : ''}`}
+                key={suggestion.id}
+                className={`px-5 py-3 rounded-lg border border-gray-300 flex flex-col justify-between items-start transition ${!!suggestion.assignedTo ? 'opacity-30 -z-100 pointer-events-none' : ''}`}
               >
                 <div className="w-full flex justify-between items-start">
                   <EditableText
-                    initialValue={task.name}
-                    onEdit={() => setSelectedTask(task)}
+                    initialValue={suggestion.task.name}
+                    onEdit={() => setSelectedTask(suggestion)}
                     onSave={(updatedName) => mutateName({ name: updatedName })}
                   />
 
-                  {task.assigned && (
+                  {!!suggestion.assignedTo && (
                     <span
                       className="ml-2 flex items-center text-xs font-medium text-green-600 bg-green-100 border border-green-300 px-2 py-0.5 rounded-full">Assigned</span>
                   )}
                 </div>
 
-                {/* tags section */}
                 <div className="flex flex-wrap gap-2 my-3 items-center">
-                  {task.tags.map(tag => (
+                  {suggestion.tags.map(tag => (
                     <Badge key={tag.id} tag={tag} onDelete={() => {}}/>
                   ))}
                   <Button
                     className="bg-transparent border-gray-300 border text-black hover:bg-gray-200 rounded-xl px-4 py-1 text-sm whitespace-nowrap"
-                    onClick={() => openAssignTag(task)}
+                    onClick={() => openAssignTag(suggestion)}
                   >
                     + Add Tag
                   </Button>
                 </div>
               </div>
-              // <div
-              //   key={task.id}
-              //   className="px-5 py-3 rounded-lg border-2 justify-between border-gray-200 flex items-start flex-col"
-              // >
-              //   <EditableText initialValue={task.name}
-              //                 onEdit={() => setSelectedTask(task)}
-              //                 onSave={(updatedName) => mutateName({ name: updatedName })}/>
-              //   <div className="flex flex-wrap gap-2 my-3 items-center">
-              //     {task.tags.map(tag => <Badge key={tag.id} tag={tag} onDelete={() => {}}/>)}
-              //     <Button
-              //       className="bg-transparent border-gray-300 border text-black hover:bg-gray-200 rounded-xl px-4 py-1 text-sm whitespace-nowrap"
-              //       onClick={() => openAssignTag(task)}
-              //     >
-              //       + Add Tag
-              //     </Button>
-              //   </div>
-              // </div>
-            ))
+            )})
         }
       </div>
 

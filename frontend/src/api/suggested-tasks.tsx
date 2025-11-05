@@ -1,6 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
-import type { SuggestedTask } from "@/api/types.tsx";
 import { queryKeys as callsQueryKeys } from './calls'
 
 export const queryKeys = {
@@ -17,7 +16,7 @@ export function useSuggestedTasksQuery() {
   })
 
   const add = useMutation({
-    mutationFn: (dto: Pick<SuggestedTask, 'name'>) => axios.post(`/suggested-tasks`, dto),
+    mutationFn: (dto: { name: string }) => axios.post(`/suggested-tasks`, dto),
     onSettled: () => queryClient.invalidateQueries({ queryKey: queryKeys.getAll() })
   })
 
@@ -27,12 +26,12 @@ export function useSuggestedTasksQuery() {
   })
 
   const update = (suggestedTaskID: string) => useMutation({
-    mutationFn: (dto: { name: string }) => axios.put(`/suggested-tasks/${suggestedTaskID}`, dto),
+    mutationFn: (dto: { name: string }) => axios.patch(`/suggested-tasks/${suggestedTaskID}/tasks`, dto),
     onSettled: () => queryClient.invalidateQueries({ queryKey: queryKeys.getAll() })
   })
 
   const assignTaskToCall = (callID: string) => useMutation({
-    mutationFn: (dto: { suggestedTaskID: string  }) => axios.post(`/calls/${callID}/suggested-tasks`, dto),
+    mutationFn: (dto: { suggestionID: string }) => axios.patch(`/suggested-tasks/${dto.suggestionID}/calls`, { assignToCallID: callID }),
     onSettled: async () => {
       await queryClient.invalidateQueries({ queryKey: callsQueryKeys.single(callID)})
       await queryClient.invalidateQueries({ queryKey: queryKeys.getAll()})

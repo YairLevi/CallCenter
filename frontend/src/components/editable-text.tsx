@@ -20,12 +20,16 @@ export function EditableText({ initialValue, onSave, onEdit }: EditableTextProps
     setIsEditing(true)
   }
 
+  // a quick hack to force a rerender that depends on the update of the parent data.
+  useEffect(() => {
+    setValue(initialValue)
+  }, [initialValue])
+
   const handleSave = () => {
     const trimmed = editValue.trim()
     if (trimmed !== value) {
       onSave(trimmed)
     }
-    setValue(trimmed)
     setIsEditing(false)
   }
 

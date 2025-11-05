@@ -17,7 +17,8 @@ export type Tag = Model & {
 export type Task =  Model & {
   id: string,
   name: string,
-  status: Status
+  status: Status,
+
 }
 
 export type Call =  Model & {
@@ -29,7 +30,7 @@ export type Call =  Model & {
 
 export type SuggestedTask =  Model & {
   id: string,
-  name: string,
-  assigned: boolean,
+  task: Task,
+  assignedTo?: Call,
   tags: Tag[]
 }
