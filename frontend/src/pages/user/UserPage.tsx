@@ -15,7 +15,9 @@ export function UserPage() {
   const navigate = useNavigate()
 
   const loweredSearch = search.toLowerCase()
-  const filteredCalls = calls?.filter(call => call.name.toLowerCase().includes(loweredSearch)) ?? []
+  const displayedCalls = (calls ?? [])
+    .filter(call => call.name.toLowerCase().includes(loweredSearch))
+    .sort((c1, c2) => c1.updatedAt < c2.updatedAt ? 1 : -1)
 
   return (
     <>
@@ -28,11 +30,17 @@ export function UserPage() {
           <Input value={search} onChange={e => setSearch(e.target.value)} placeholder={'Search for a call...'}/>
           <div className="flex flex-col overflow-auto gap-2 lg:h-full h-60">
             {
-              filteredCalls.length == 0
+              displayedCalls.length == 0
                 ? <Placeholder text='Found no matching calls.'/>
-                : filteredCalls.map(call => (
-                  <span key={call.id} onClick={() => navigate(`/user/calls/${call.id}`)}
-                        className="px-5 py-3 rounded-lg border-2 border-gray-200">{call.name}</span>
+                : displayedCalls.map(call => (
+                  <div key={call.id} className="px-5 py-3 rounded-lg border-2 border-gray-200 flex justify-between items-center gap-3">
+                    <span className='text-ellipsis line-clamp-2' onClick={() => navigate(`/user/calls/${call.id}`)}>{call.name}</span>
+                    <div className="flex flex-col *:text-xs *:text-gray-500 min-w-20 max-w-20">
+                      <p className='text-xs'>Last update: </p>
+                      <span>{new Date(call.updatedAt).toLocaleString()}</span>
+                    </div>
+                  </div>
+
                 ))
             }
           </div>

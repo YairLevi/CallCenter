@@ -9,7 +9,7 @@ type AssignTagDialogProps = DialogProps & {
 
 export function ChangeTaskStatusDialog(props: AssignTagDialogProps) {
   const { id } = useParams()
-  const mutation = useCalls().changeTaskStatus(id)
+  const mutation = useCalls().changeTaskStatus(props.task.id, id)
 
   function changeStatus(status: Status) {
     mutation.mutate({ ...props.task, status})

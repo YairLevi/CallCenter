@@ -37,32 +37,15 @@ export class CallsService {
     ).exec()
   }
 
-  async addTask(id: string, taskName: string) {
-    const task = new Task();
-    task.name = taskName;
-
+  async addTask(id: string, taskID: string) {
     return await this.callModel.findOneAndUpdate(
       { _id: id },
-      { $push: { tasks: task } },
+      { $push: { tasks: taskID } },
       { new: true } // return the updated document
     ).exec();
-
   }
 
-  async changeTaskStatus(id: string, task: Partial<TaskDocument> ) {
-    const call = await this.callModel.findById(id);
-    if (!call) throw new NotFoundException(`Call ${id} not found`);
-
-    const taskDoc = call.tasks.find((t: TaskDocument) => t.id === task.id);
-    if (!taskDoc) {
-      throw new NotFoundException(`Task ${task.id} not found`);
-    }
-
-    if (task.status) {
-      taskDoc.status = task.status;
-    }
-
-    await call.save();
-    return call;
+  async triggerUpdate(id: string) {
+    await this.callModel.findOneAndUpdate({ _id: id }, { updatedAt: true })
   }
 }

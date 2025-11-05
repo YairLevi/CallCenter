@@ -17,13 +17,8 @@ export class Call {
   @Prop({ type: [{ type: Types.ObjectId, ref: Tag.name }], default: [] })
   tags: Types.ObjectId[];
 
-  @Prop({
-    type: [Task],
-    default: [],
-    toJSON: { virtuals: true },
-    toObject: { virtuals: true }
-  })
-  tasks: Task[]
+  @Prop({ type: [{ type: Types.ObjectId, ref: Task.name }], default: [] })
+  tasks: Types.ObjectId[];
 }
 
 export type CallDocument  = HydratedDocument<Call>

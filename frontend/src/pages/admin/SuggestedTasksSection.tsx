@@ -7,6 +7,7 @@ import { Badge } from "@/components/badge.tsx";
 import { Dialog, useDialogProps } from "@/components/dialog.tsx";
 import type { SuggestedTask } from "@/api/types.tsx";
 import { EditableText } from "@/components/editable-text.tsx";
+import { Placeholder } from "@/components/placeholder.tsx";
 
 type State = 'Loading' | 'Done'
 
@@ -20,6 +21,12 @@ export function SuggestedTasksSection() {
   const [selectedTask, setSelectedTask] = useState<SuggestedTask>()
   const { mutate } = assign(selectedTask?.id)
   const { mutate: mutateName } = update(selectedTask?.id)
+
+  function onAddTask() {
+    if (name.length == 0)
+      return
+    add.mutate({ name })
+  }
 
   function onSubmit(tagID: string) {
     mutate({ tagID })
@@ -48,29 +55,61 @@ export function SuggestedTasksSection() {
           onChange={e => setName(e.target.value)}
           className="w-full border border-gray-300 px-3 py-1 rounded"
         />
-        <Button onClick={() => { add.mutate({ name }) }}>Add Suggested Task</Button>
+        <Button onClick={() => onAddTask()}>Add Suggested Task</Button>
       </div>
       <div className='overflow-auto w-full lg:h-3/4 lg:w-full  flex flex-col gap-2'>
         {
-          suggestedTasks.data.map(task => (
-            <div
-              key={task.id}
-              className="px-5 py-3 rounded-lg border-2 justify-between border-gray-200 flex items-start flex-col"
-            >
-              <EditableText initialValue={task.name}
-                            onEdit={() => setSelectedTask(task)}
-                            onSave={(updatedName) => mutateName({ name: updatedName })}/>
-              <div className="flex flex-wrap gap-2 my-3 items-center">
-                {task.tags.map(tag => <Badge key={tag.id} tag={tag} onDelete={() => {}}/>)}
-                <Button
-                  className="bg-transparent border-gray-300 border text-black hover:bg-gray-200 rounded-xl px-4 py-1 text-sm whitespace-nowrap"
-                  onClick={() => openAssignTag(task)}
-                >
-                  + Add Tag
-                </Button>
+          suggestedTasks?.data.length == 0
+            ? <Placeholder text='No suggested tasks exist yet.'/>
+            : suggestedTasks.data.map(task => (
+              <div
+                key={task.id}
+                className={`px-5 py-3 rounded-lg border border-gray-300 flex flex-col justify-between items-start transition ${task.assigned ? 'opacity-30 -z-100 pointer-events-none' : ''}`}
+              >
+                <div className="w-full flex justify-between items-start">
+                  <EditableText
+                    initialValue={task.name}
+                    onEdit={() => setSelectedTask(task)}
+                    onSave={(updatedName) => mutateName({ name: updatedName })}
+                  />
+
+                  {task.assigned && (
+                    <span
+                      className="ml-2 flex items-center text-xs font-medium text-green-600 bg-green-100 border border-green-300 px-2 py-0.5 rounded-full">Assigned</span>
+                  )}
+                </div>
+
+                {/* tags section */}
+                <div className="flex flex-wrap gap-2 my-3 items-center">
+                  {task.tags.map(tag => (
+                    <Badge key={tag.id} tag={tag} onDelete={() => {}}/>
+                  ))}
+                  <Button
+                    className="bg-transparent border-gray-300 border text-black hover:bg-gray-200 rounded-xl px-4 py-1 text-sm whitespace-nowrap"
+                    onClick={() => openAssignTag(task)}
+                  >
+                    + Add Tag
+                  </Button>
+                </div>
               </div>
-            </div>
-          ))
+              // <div
+              //   key={task.id}
+              //   className="px-5 py-3 rounded-lg border-2 justify-between border-gray-200 flex items-start flex-col"
+              // >
+              //   <EditableText initialValue={task.name}
+              //                 onEdit={() => setSelectedTask(task)}
+              //                 onSave={(updatedName) => mutateName({ name: updatedName })}/>
+              //   <div className="flex flex-wrap gap-2 my-3 items-center">
+              //     {task.tags.map(tag => <Badge key={tag.id} tag={tag} onDelete={() => {}}/>)}
+              //     <Button
+              //       className="bg-transparent border-gray-300 border text-black hover:bg-gray-200 rounded-xl px-4 py-1 text-sm whitespace-nowrap"
+              //       onClick={() => openAssignTag(task)}
+              //     >
+              //       + Add Tag
+              //     </Button>
+              //   </div>
+              // </div>
+            ))
         }
       </div>
 

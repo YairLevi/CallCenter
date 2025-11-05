@@ -4,15 +4,16 @@ import { SuggestedTasksController } from './suggested-tasks.controller';
 import { MongooseModule, SchemaFactory } from "@nestjs/mongoose";
 import { SuggestedTask } from "./suggested-tasks.model";
 import { CallsModule } from "../calls/calls.module";
+import { TasksModule } from "../tasks/tasks.module";
 
 @Module({
   imports: [
     MongooseModule.forFeature([{ name: SuggestedTask.name, schema: SchemaFactory.createForClass(SuggestedTask) }]),
-    CallsModule
+    CallsModule,
+    TasksModule
   ],
-  providers: [
-    SuggestedTasksService,
-  ],
-  controllers: [SuggestedTasksController]
+  providers: [SuggestedTasksService],
+  controllers: [SuggestedTasksController],
+  exports: [SuggestedTasksService],
 })
 export class SuggestedTasksModule {}

@@ -11,8 +11,8 @@ export function useTasksQueries() {
     onSettled: () => queryClient.invalidateQueries({ queryKey: queryKeys.single(callID) })
   })
 
-  const changeTaskStatus = (callID: string) => useMutation({
-    mutationFn: (task: Partial<Task>) => axios.put(`/calls/${callID}/tasks`, task),
+  const changeTaskStatus = (taskID: string, callID: string) => useMutation({
+    mutationFn: (dto: Pick<Task, 'status'>) => axios.put(`/tasks/${taskID}`, { callID, status: dto.status }),
     onSettled: () => queryClient.invalidateQueries({ queryKey: queryKeys.single(callID) })
   })
 

@@ -1,12 +1,14 @@
 import { Body, Controller, Get, HttpCode, HttpStatus, Param, Post, Put } from "@nestjs/common";
 import { CallsService } from "./calls.service";
 import { CreateCallDTO } from "./calls.dto";
-import { TaskDocument } from "../tasks/tasks.model";
+import { CallAssignmentService } from "../core/call-core.service";
 
 @Controller("calls")
 export class CallsController {
   constructor(
-    private readonly callService: CallsService
+    private readonly callService: CallsService,
+    private readonly callAssignmentService: CallAssignmentService,
+    // private readonly assignmentService: AssignmentsService
   ) {}
 
   @Get()
@@ -31,12 +33,13 @@ export class CallsController {
   }
 
   @Post(':id/tasks')
-  addTask(@Param('id') id: string, @Body() dto: { name: string }) {
-    return this.callService.addTask(id, dto.name)
+  async addTask(@Param('id') id: string, @Body() dto: { name: string }) {
+    return await this.callAssignmentService.pushTask(id, dto.name)
   }
-
-  @Put(':id/tasks')
-  changeTaskStatus(@Param('id') id: string, @Body() dto: Partial<TaskDocument>) {
-    return this.callService.changeTaskStatus(id, dto)
-  }
+  //
+  // @Post(':id/suggested-tasks')
+  // @HttpCode(HttpStatus.OK)
+  // async assignToCall(@Param('id') id: string, @Body() dto: { taskID: string }) {
+  //   await this.assignmentService.assign(dto.taskID, id)
+  // }
 }

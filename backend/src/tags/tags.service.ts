@@ -10,7 +10,7 @@ export class TagsService {
     @InjectModel(Tag.name) private tagModel: Model<TagDocument>
   ) {}
 
-  async create(@Body() dto: CreateTagDTO){
+  async create(@Body() dto: CreateTagDTO) {
     return await this.tagModel.create(dto)
   }
 
@@ -19,14 +19,7 @@ export class TagsService {
   }
 
   async update(id: string, dto: UpdateTagDTO) {
-    return await this.tagModel.findOneAndUpdate({
-      _id: id
-    }, {
-      ...dto,
-      updatedAt: new Date()
-    }, {
-      new: true
-    }).exec()
+    return await this.tagModel.findOneAndUpdate({ _id: id }, dto, { new: true }).exec()
   }
 
   async delete(id: string) {

@@ -4,26 +4,32 @@ export enum Status {
   Completed = 'Completed',
 }
 
-export type Tag = {
+export type Model = {
+  updatedAt: Date,
+  createdAt: Date
+}
+
+export type Tag = Model & {
   id: string
   name: string
 }
 
-export type Task = {
+export type Task =  Model & {
   id: string,
   name: string,
   status: Status
 }
 
-export type Call = {
+export type Call =  Model & {
   id: string,
   name: string,
   tags: Tag[]
   tasks: Task[]
 }
 
-export type SuggestedTask = {
+export type SuggestedTask =  Model & {
   id: string,
   name: string,
+  assigned: boolean,
   tags: Tag[]
 }

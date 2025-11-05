@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from "@nestjs/mongoose";
 import { Model } from "mongoose";
 import { SuggestedTask, SuggestedTaskDocument } from "./suggested-tasks.model";
-import { AssignTagDTO, CreateSuggestedTaskDTO } from "./suggested-tasks.dto";
+import { AssignTagDTO } from "./suggested-tasks.dto";
 
 @Injectable()
 export class SuggestedTasksService {
@@ -11,16 +11,18 @@ export class SuggestedTasksService {
   ) {}
 
   async getAll() {
-    const populateKey: keyof SuggestedTask = 'tags'
+    const populateKey: (keyof SuggestedTask)[] = ['tags', 'task', 'assignedTo']
     return await this.model.find().populate(populateKey).exec()
   }
 
-  async getByID(id: string) {
+  async getByID(id: string): Promise<SuggestedTask> {
     return await this.model.findOne({ _id: id }).exec()
   }
 
-  async add(dto: CreateSuggestedTaskDTO) {
-    return await this.model.create({ name: dto.name })
+  async add(taskID: string) {
+    return await this.model.create({
+      task: taskID
+    })
   }
 
   async update(id: string, dto: Partial<SuggestedTask>) {
@@ -39,7 +41,10 @@ export class SuggestedTasksService {
     ).exec()
   }
 
-  async delete(id: string) {
-    return await this.model.deleteOne({ _id: id }).exec()
+  async assignToCall(suggestedTaskID: string, callID: string) {
+    await this.model.findOneAndUpdate(
+      { _id: suggestedTaskID },
+      { $set: { assignedCall: callID } }
+    )
   }
 }

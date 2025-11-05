@@ -1,13 +1,14 @@
-import { Body, Controller, Get, HttpCode, HttpStatus, Param, Patch, Post, Put } from '@nestjs/common';
+import { Body, Controller, Get, Param, Patch, Post } from '@nestjs/common';
 import { SuggestedTasksService } from "./suggested-tasks.service";
-import { SuggestedTask } from "./suggested-tasks.model";
-import { CallsService } from "../calls/calls.service";
 import { AssignTagDTO, CreateSuggestedTaskDTO } from "./suggested-tasks.dto";
+import { TasksService } from "../tasks/tasks.service";
+import { CallsService } from "../calls/calls.service";
 
 @Controller('suggested-tasks')
 export class SuggestedTasksController {
   constructor(
     private readonly suggestedTasksService: SuggestedTasksService,
+    private readonly taskService: TasksService,
     private readonly callService: CallsService
   ) {}
 
@@ -18,13 +19,8 @@ export class SuggestedTasksController {
 
   @Post()
   async create(@Body() dto: CreateSuggestedTaskDTO) {
-    console.log(dto)
-    return await this.suggestedTasksService.add(dto)
-  }
-
-  @Put(':id')
-  async update(@Param('id') id: string, @Body() dto: Partial<SuggestedTask>) {
-    return await this.suggestedTasksService.update(id, dto)
+    const task = await this.taskService.create(dto)
+    return await this.suggestedTasksService.add(task.id)
   }
 
   @Patch(':id/tags')
@@ -32,11 +28,12 @@ export class SuggestedTasksController {
     return await this.suggestedTasksService.addTag(id, dto)
   }
 
-  @Post(':id/:callID')
-  @HttpCode(HttpStatus.OK)
-  async assignToCall(@Param('id') suggestedTaskID: string, @Param('callID') callID: string) {
-    const suggestedTask: SuggestedTask = await this.suggestedTasksService.getByID(suggestedTaskID)
-    await this.suggestedTasksService.delete(suggestedTaskID)
-    await this.callService.addTask(callID, suggestedTask.name)
+  @Patch(':id/calls')
+  async assignToCall(@Param('id') suggestedTaskID: string, @Body() callID: string) {
+    const suggestion = await this.suggestedTasksService.getByID(suggestedTaskID)
+    const task = await this.taskService.getByID(suggestion.task.toString())
+    await this.callService.addTask(callID, task.id)
+    await this.taskService.update(task.id, { call: callID as any, status: 'Open' })
+    await this.suggestedTasksService.assignToCall(suggestedTaskID, callID)
   }
 }

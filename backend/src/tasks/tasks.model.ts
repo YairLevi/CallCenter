@@ -1,5 +1,7 @@
 import { Prop, Schema } from "@nestjs/mongoose";
-import { HydratedDocument } from "mongoose";
+import { HydratedDocument, Types } from "mongoose";
+import { Call } from "../calls/calls.model";
+import { Tag } from "../tags/tags.model";
 
 export type Status = 'Open' | 'In Progress' | 'Completed'
 
@@ -15,6 +17,9 @@ export class Task {
 
   @Prop({ require: true, default: 'Open' })
   status: Status
+
+  @Prop({ type: Types.ObjectId, ref: 'Call', required: false }) // null = not assigned})
+  call: Types.ObjectId
 }
 
 export type TaskDocument = HydratedDocument<Task>

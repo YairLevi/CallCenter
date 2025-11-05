@@ -10,24 +10,20 @@ export class TasksService {
     @InjectModel(Task.name) private taskModel: Model<TaskDocument>
   ) {}
 
-  async getAll(){
-    return await this.taskModel.find().exec()
-  }
-
-  async create(dto: CreateTaskDTO) {
-    await this
+  async create(dto: { name: string }) {
     return await this.taskModel.create(dto)
   }
 
+  async getByID(taskID: string) {
+    return await this.taskModel.findOne({ _id: taskID }).exec()
+  }
+
   async update(id: string, dto: UpdateTaskDTO) {
-    return await this.taskModel.findOneAndUpdate({
-      _id: id
-    }, {
-      ...dto,
-      updatedAt: new Date(),
-    }, {
-      new: true
-    }).exec()
+    return await this.taskModel.findOneAndUpdate(
+      { _id: id },
+        dto,
+      { new: true }
+    ).exec()
   }
 
   async delete(id: string) {

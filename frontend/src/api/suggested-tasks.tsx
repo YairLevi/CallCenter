@@ -1,6 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import type { SuggestedTask } from "@/api/types.tsx";
+import { queryKeys as callsQueryKeys } from './calls'
 
 export const queryKeys = {
   getAll: () => ['suggested-tasks']
@@ -30,10 +31,19 @@ export function useSuggestedTasksQuery() {
     onSettled: () => queryClient.invalidateQueries({ queryKey: queryKeys.getAll() })
   })
 
+  const assignTaskToCall = (callID: string) => useMutation({
+    mutationFn: (dto: { suggestedTaskID: string  }) => axios.post(`/calls/${callID}/suggested-tasks`, dto),
+    onSettled: async () => {
+      await queryClient.invalidateQueries({ queryKey: callsQueryKeys.single(callID)})
+      await queryClient.invalidateQueries({ queryKey: queryKeys.getAll()})
+    },
+  })
+
   return {
     getAll,
     add,
     assign,
-    update
+    update,
+    assignTaskToCall
   }
 }
