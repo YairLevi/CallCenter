@@ -44,7 +44,7 @@ export class SuggestedTasksService {
   async assignToCall(suggestedTaskID: string, callID: string) {
     await this.model.findOneAndUpdate(
       { _id: suggestedTaskID },
-      { $set: { assignedCall: callID } }
+      { $set: { assignedTo: callID } }
     )
   }
 }
