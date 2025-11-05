@@ -21,3 +21,9 @@ export type Call = {
   tags: Tag[]
   tasks: Task[]
 }
+
+export type SuggestedTask = {
+  id: string,
+  name: string,
+  tags: Tag[]
+}

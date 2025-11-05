@@ -5,6 +5,7 @@ import { UserPage } from "@/pages/user";
 import { CallsProvider } from "@/pages/user/CallsProvider.tsx";
 import { TagsProvider } from "@/contexts/TagsProviders.tsx";
 import './App.css'
+import { SuggestedTasksProvider } from "@/contexts/SuggestedTasksProvider.tsx";
 
 function App() {
   const location = useLocation()
@@ -31,17 +32,19 @@ function App() {
         </Button>
       </div>
       <TagsProvider>
-        <div className="w-8/10 h-8/10">
-          <Routes>
-            <Route path='/admin' element={<AdminPage/>}/>
-            <Route path='/user/*' element={
-              <CallsProvider>
-                <UserPage/>
-              </CallsProvider>
-            }/>
-            <Route path='*' element={<div>Unknown. Please select the user page or admin page!</div>}/>
-          </Routes>
-        </div>
+        <SuggestedTasksProvider>
+          <div className="w-8/10 h-8/10">
+            <Routes>
+              <Route path='/admin' element={<AdminPage/>}/>
+              <Route path='/user/*' element={
+                <CallsProvider>
+                  <UserPage/>
+                </CallsProvider>
+              }/>
+              <Route path='*' element={<div className='w-full h-full flex items-center justify-center'>Please select if you'd like to go to the Admin or User page, using the buttons above.</div>}/>
+            </Routes>
+          </div>
+        </SuggestedTasksProvider>
       </TagsProvider>
     </div>
   )

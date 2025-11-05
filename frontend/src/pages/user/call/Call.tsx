@@ -7,6 +7,7 @@ import { AssignTagDialog } from "@/pages/user/call/AssignTagDialog.tsx";
 import { AddTaskDialog } from "@/pages/user/call/AddTaskDialog.tsx";
 import { ChangeTaskStatusDialog } from "@/pages/user/call/ChangeTaskStatusDialog.tsx";
 import { Placeholder } from "@/components/placeholder.tsx";
+import { Badge } from "@/components/badge.tsx";
 
 export function Call() {
   const [open, setOpen] = useState(false)
@@ -26,14 +27,7 @@ export function Call() {
       <h1 className="font-semibold text-xl">Selected Call: {call.name}</h1>
       <p className="font-bold mt-5">Tags:</p>
       <div className="flex flex-wrap gap-2 my-3 items-center">
-        {call?.tags?.map(tag => (
-          <div
-            key={tag.id}
-            className="flex items-center bg-gray-600 text-white border border-gray-500 rounded-xl px-4 py-1 text-sm whitespace-nowrap"
-          >
-            {tag.name}
-          </div>
-        ))}
+        {call?.tags?.map(tag => <Badge tag={tag} />)}
         <Button
           className="bg-transparent border-gray-300 border text-black hover:bg-gray-200 rounded-xl px-4 py-1 text-sm whitespace-nowrap"
           onClick={() => setOpen(true)}
