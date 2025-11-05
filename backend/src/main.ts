@@ -18,7 +18,6 @@ async function bootstrap() {
     app.enableCors({ origin: [allowedOrigin] });
   }
 
-  console.log(`NEST application running on port: ${port}, allowing access using cors from: ${allowedOrigin}`)
   await app.listen(port);
 }
 bootstrap();

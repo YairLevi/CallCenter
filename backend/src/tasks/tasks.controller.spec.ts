@@ -81,7 +81,6 @@ describe('Tasks Integration via CallsController', () => {
       .send({ name: 'Review contract' })
       .expect(HttpStatus.CREATED)
 
-    console.log(addResponse.body)
     const taskId = addResponse.body.tasks[0].id
 
     await request(app.getHttpServer())

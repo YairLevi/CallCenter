@@ -19,7 +19,6 @@ export class TasksService {
   }
 
   async update(id: string, dto: UpdateTaskDTO) {
-    console.log(dto, id)
     return await this.taskModel.findOneAndUpdate(
       { _id: id },
         dto,

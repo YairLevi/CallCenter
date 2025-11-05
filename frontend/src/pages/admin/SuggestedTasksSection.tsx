@@ -22,8 +22,6 @@ export function SuggestedTasksSection() {
   const { mutate } = assign(selectedTask?.id)
   const { mutate: mutateName } = update(selectedTask?.id)
 
-  useEffect(() => console.log('a'))
-
   function onAddTask() {
     if (name.length == 0)
       return
@@ -63,7 +61,7 @@ export function SuggestedTasksSection() {
         {
           suggestedTasks?.data.length == 0
             ? <Placeholder text='No suggested tasks exist yet.'/>
-            : suggestedTasks.data.map(suggestion => { console.log(suggestion); return (
+            : suggestedTasks.data.map(suggestion => (
               <div
                 key={suggestion.id}
                 className={`px-5 py-3 rounded-lg border border-gray-300 flex flex-col justify-between items-start transition ${!!suggestion.assignedTo ? 'opacity-30 -z-100 pointer-events-none' : ''}`}
@@ -93,7 +91,7 @@ export function SuggestedTasksSection() {
                   </Button>
                 </div>
               </div>
-            )})
+            ))
         }
       </div>
 
