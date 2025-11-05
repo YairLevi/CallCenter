@@ -1,6 +1,5 @@
 import type { UseMutationResult } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
-import { tryGetErrorMessage } from "@/api/try-get-error-message.ts";
 
 export function useMutationErrorMessage(mutations: UseMutationResult[]) {
   const [error, setError] = useState('')
@@ -22,4 +21,10 @@ export function useMutationErrorMessage(mutations: UseMutationResult[]) {
   }, [...mutations.map(m => m.isError)])
 
   return error
+}
+
+export function tryGetErrorMessage(res: any) {
+  if (res == undefined)
+    return ''
+  return res?.response?.data?.message ?? 'Failed to perform operation'
 }

@@ -1,11 +1,11 @@
-import { Route, Routes, useLocation, useNavigate } from "react-router";
-import { AdminPage } from "./pages/admin";
+import { Route, Routes, useNavigate } from "react-router";
+import { AdminPage } from "./pages/admin/AdminPage";
 import { Button } from "@/components/ui/button.tsx";
-import { UserPage } from "@/pages/user";
-import { CallsProvider } from "@/pages/user/CallsProvider.tsx";
+import { UserPage } from "@/pages/user/UserPage";
+import { CallsProvider } from "@/contexts/CallsProvider.tsx";
 import { TagsProvider } from "@/contexts/TagsProviders.tsx";
-import './App.css'
 import { SuggestedTasksProvider } from "@/contexts/SuggestedTasksProvider.tsx";
+import './App.css'
 
 function App() {
   const navigate = useNavigate()
@@ -29,7 +29,9 @@ function App() {
                   <UserPage/>
                 </CallsProvider>
               }/>
-              <Route path='*' element={<div className='w-full h-full flex items-center justify-center'>Please select if you'd like to go to the Admin or User page, using the buttons above.</div>}/>
+              <Route path='*' element={<div className='w-full h-full flex items-center justify-center'>
+                Please select if you'd like to go to the Admin or User page, using the buttons above.
+              </div>}/>
             </Routes>
           </div>
         </SuggestedTasksProvider>

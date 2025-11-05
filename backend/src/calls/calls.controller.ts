@@ -1,4 +1,15 @@
-import { Body, Controller, Get, HttpCode, HttpStatus, Param, Post, Put } from "@nestjs/common";
+import {
+  BadRequestException,
+  Body,
+  Controller,
+  Delete,
+  Get,
+  HttpCode,
+  HttpStatus,
+  Param,
+  Post,
+  Put
+} from "@nestjs/common";
 import { CallsService } from "./calls.service";
 import { CreateCallDTO } from "./calls.dto";
 import { CallAssignmentService } from "../core/call-core.service";
@@ -30,6 +41,21 @@ export class CallsController {
   @Put(":id/tags")
   assignTag(@Param('id') id: string, @Body() dto: { tagID: string }) {
     return this.callService.assignTag(id, dto.tagID)
+  }
+
+  @Delete(':id')
+  async deleteCall(@Param('id') id: string) {
+    await this.callService.deleteCall(id)
+  }
+
+  @Delete(':id/tags/:tagID')
+  deleteTag(@Param('id') id: string, @Param('tagID') tagID: string) {
+    try {
+      return this.callService.deleteTag(id, tagID)
+    }
+    catch (e) {
+      throw new BadRequestException('Failed to delete tag.')
+    }
   }
 
   @Post(':id/tasks')

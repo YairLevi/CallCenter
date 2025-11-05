@@ -1,9 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { Model } from "mongoose";
 import { InjectModel } from "@nestjs/mongoose";
 import { Call, CallDocument } from "./calls.model";
 import { CreateCallDTO } from "./calls.dto";
-import { Task, TaskDocument } from "../tasks/tasks.model";
 
 @Injectable()
 export class CallsService {
@@ -11,7 +10,7 @@ export class CallsService {
     @InjectModel(Call.name) private callModel: Model<CallDocument>
   ) {}
 
-  async getAll(){
+  async getAll() {
     return await this.callModel
       .find()
       .exec()
@@ -27,6 +26,12 @@ export class CallsService {
 
   async create(dto: CreateCallDTO) {
     return await this.callModel.create(dto)
+  }
+
+  async deleteCall(id: string) {
+    const result = await this.callModel.deleteOne({ _id: id }).exec()
+    if (!result.acknowledged || result.deletedCount == 0)
+      throw new BadRequestException('Failed to delete call. Try to refresh the page')
   }
 
   async assignTag(id: string, tagID: string) {
@@ -45,7 +50,11 @@ export class CallsService {
     ).exec();
   }
 
-  async triggerUpdate(id: string) {
-    await this.callModel.findOneAndUpdate({ _id: id }, { updatedAt: true })
+  async deleteTag(id: string, tagID: string) {
+    return await this.callModel.findOneAndUpdate(
+      { _id: id },
+      { $pull: { tags: tagID }},
+      { new: true }
+    ).exec()
   }
 }

@@ -1,8 +1,8 @@
 import { Button } from "@/components/ui/button.tsx";
 import { useState } from "react";
-import { useCalls } from "@/pages/user/CallsProvider.tsx";
-import { AddCallDialog } from "@/pages/user/AddCallDialog.tsx";
-import { Call } from "@/pages/user/call/Call.tsx";
+import { useCalls } from "@/contexts/CallsProvider.tsx";
+import { AddCallDialog } from "@/pages/user/dialogs/AddCallDialog.tsx";
+import { Call } from "@/pages/user/Call.tsx";
 import { Route, Routes, useNavigate } from "react-router";
 import { Input } from "@/components/ui/input.tsx";
 import { Placeholder } from "@/components/placeholder.tsx";

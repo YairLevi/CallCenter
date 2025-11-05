@@ -1,19 +1,19 @@
 import type { Task } from "@/api/types.tsx";
 import { Button } from "@/components/ui/button.tsx";
 import { useState } from "react";
-import { useCalls } from "@/pages/user/CallsProvider.tsx";
-import { useParams } from "react-router";
-import { AssignTagDialog } from "@/pages/user/call/AssignTagDialog.tsx";
-import { AddTaskDialog } from "@/pages/user/call/AddTaskDialog.tsx";
-import { ChangeTaskStatusDialog } from "@/pages/user/call/ChangeTaskStatusDialog.tsx";
+import { useCalls } from "@/contexts/CallsProvider.tsx";
+import { useNavigate, useParams } from "react-router";
+import { AssignTagDialog } from "@/pages/user/dialogs/AssignTagDialog.tsx";
+import { AddTaskDialog } from "@/pages/user/dialogs/AddTaskDialog.tsx";
+import { ChangeTaskStatusDialog } from "@/pages/user/dialogs/ChangeTaskStatusDialog.tsx";
 import { Placeholder } from "@/components/placeholder.tsx";
 import { Badge } from "@/components/badge.tsx";
-import { AssignSuggestedTaskDialog } from "@/pages/user/call/AssignSuggestedTaskDialog.tsx";
+import { AssignSuggestedTaskDialog } from "@/pages/user/dialogs/AssignSuggestedTaskDialog.tsx";
 import { useDialogProps } from "@/components/dialog.tsx";
-import { isServer } from "@tanstack/react-query";
 import { useTags } from "@/contexts/TagsProviders.tsx";
 
 export function Call() {
+  const navigate =  useNavigate()
   const [open, setOpen] = useState(false)
   const [openStatusChanger, setOpenStatusChanger] = useState(false)
   const [openAddTask, setOpenAddTask] = useState(false)
@@ -21,8 +21,17 @@ export function Call() {
 
   const { id } = useParams()
   const { tags } = useTags()
-  const { data: call, isPending, isError } = useCalls().single(id)
+
+  const { delete: deleteCall, single } = useCalls()
+  const { data: call, isPending, isError } = single(id)
+
   const [selectedTask, setSelectedTask] = useState<Task>()
+
+
+  function deleteCallAndNavigateToUser() {
+    deleteCall.mutate({ callID: call.id })
+    navigate('/user')
+  }
 
   if (isPending)
     return <div>Loading...</div>
@@ -33,7 +42,10 @@ export function Call() {
 
   return <>
     <div className="flex flex-col h-full">
-      <h1 className="font-semibold text-xl">Selected Call: {call.name}</h1>
+      <div className='flex justify-between'>
+        <h1 className="font-semibold text-xl">Selected Call: {call.name}</h1>
+        <Button variant='destructive' onClick={deleteCallAndNavigateToUser}>Delete Call</Button>
+      </div>
       <p className="font-bold mt-5">Tags:</p>
       <div className="flex flex-wrap gap-2 my-3 items-center">
         {call.tags?.map(tag => <Badge key={tag.id} tag={tag} />)}

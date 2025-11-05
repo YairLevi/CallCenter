@@ -26,6 +26,11 @@ export function useCallsQueries() {
     onSettled: () => queryClient.invalidateQueries({ queryKey: queryKeys.all() })
   })
 
+  const deleteCall = useMutation({
+    mutationFn: (dto: { callID: string }) => axios.delete(`/calls/${dto.callID}`),
+    onSettled: () => queryClient.invalidateQueries({ queryKey: queryKeys.all() })
+  })
+
   const assignTag = (callID: string) => useMutation({
     mutationFn: (tag: Tag) => axios.put(`/calls/${callID}/tags`, { tagID: tag.id }),
     onSettled: () => queryClient.invalidateQueries({ queryKey: queryKeys.single(callID) })
@@ -46,6 +51,7 @@ export function useCallsQueries() {
     getSingle,
     assignTag,
     add,
+    deleteCall,
     edit,
   }
 }

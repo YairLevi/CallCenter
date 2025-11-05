@@ -1,5 +1,5 @@
 import { Dialog, type DialogProps } from "@/components/dialog.tsx";
-import { useCalls } from "@/pages/user/CallsProvider.tsx";
+import { useCalls } from "@/contexts/CallsProvider.tsx";
 import { Status, type Task } from "@/api/types.tsx";
 import { useParams } from "react-router";
 

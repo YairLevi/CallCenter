@@ -9,15 +9,11 @@ import type { SuggestedTask } from "@/api/types.tsx";
 import { EditableText } from "@/components/editable-text.tsx";
 import { Placeholder } from "@/components/placeholder.tsx";
 import { X } from "lucide-react";
+import { useMutationErrorMessage } from "@/hooks/useMutationErrorMessage.tsx";
 
-import { tryGetErrorMessage } from "@/api/try-get-error-message.ts";
-import { useMutationErrorMessage } from "@/pages/admin/useMutationErrorMessage.tsx";
-
-type State = 'Loading' | 'Done'
 
 export function SuggestedTasksSection() {
   const { tags } = useTags()
-  const [errorText, setErrorText] = useState('')
 
   const [name, setName] = useState('')
   // used to determine which task is currently edited. TODO: if there's time, try to find more organized solution

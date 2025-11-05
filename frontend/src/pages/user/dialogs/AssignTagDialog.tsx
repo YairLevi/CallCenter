@@ -1,5 +1,5 @@
 import { Dialog, type DialogProps } from "@/components/dialog.tsx";
-import { useCalls } from "@/pages/user/CallsProvider.tsx";
+import { useCalls } from "@/contexts/CallsProvider.tsx";
 import type { Tag } from "@/api/types.tsx";
 import { useTags } from "@/contexts/TagsProviders.tsx";
 import { useParams } from "react-router";

@@ -1,5 +1,5 @@
 import { createContext, type PropsWithChildren, useContext } from "react";
-import { type Call } from "@/api/types";
+import { type Call } from "@/api/types.tsx";
 import { useCallsQueries } from "@/api/calls.tsx";
 import type { UseMutationResult, UseQueryResult } from "@tanstack/react-query";
 import { useTasksQueries } from "@/api/tasks.tsx";
@@ -9,9 +9,10 @@ type ContextExports = {
   calls: Call[]
   single: (callID: string) => UseQueryResult<Call>
   add: (call: Partial<Call>) => void
+  delete: UseMutationResult
   addTask: (callID: string) => UseMutationResult
   assignTag: (callID: string) => UseMutationResult
-  changeTaskStatus: (taskID: string, callID: string) => UseMutationResult
+  changeTaskStatus: (taskID: string, callID: string) => UseMutationResult,
 }
 
 const Context = createContext<ContextExports>({} as ContextExports)
@@ -36,7 +37,8 @@ export function CallsProvider({ children }: PropsWithChildren) {
     add: (call: Partial<Call>) => callQueries.add.mutate(call.name),
     assignTag: callQueries.assignTag,
     addTask: taskQueries.addTask,
-    changeTaskStatus: taskQueries.changeTaskStatus
+    changeTaskStatus: taskQueries.changeTaskStatus,
+    delete: callQueries.deleteCall
   }
 
   return (
