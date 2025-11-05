@@ -23,12 +23,13 @@ export function AssignSuggestedTaskDialog(props: Props) {
   if (suggestedTasks.isError)
     return <div>Error happened while trying to fetch suggested tasks.</div>
 
-  const matchingTasks = suggestedTasks.data.filter(suggestion => suggestion.tags
-    .map(t=>t.id)
-    .some(tag => props.tags
-      .map(t=>t.id)
-      .includes(tag)
-    )
+  // tasks without a tag are fine to display. tasks with tags must have one shared tag with the call. call with tags displays all tasks.
+  const matchingTasks = suggestedTasks.data.filter(suggestion => suggestion.tags.length == 0 ||
+    suggestion.tags.map(t => t.id)
+      .some(tag => props.tags
+        .map(t => t.id)
+        .includes(tag)
+      )
     &&
     !suggestion.assignedTo
   )
@@ -36,6 +37,7 @@ export function AssignSuggestedTaskDialog(props: Props) {
   return (
     <Dialog {...props}>
       <Dialog.Group>
+        <p className='text-xs text-white mb-3'>The tasks being shown have a shared tag with this call, or no tag at all.</p>
         <div className="flex flex-col gap-2 overflow-y-auto h-[50vh] pr-2">
           {
             matchingTasks.length == 0
