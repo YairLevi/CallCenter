@@ -11,7 +11,7 @@ function App() {
   const navigate = useNavigate()
 
   return (
-    <div className="flex flex-col justify-center h-screen">
+    <div className="flex flex-col justify-center h-screen overflow-hidden">
       <div className="flex flex-col md:flex-row mb-10 px-4 md:px-20 border-b border-gray-300 items-start md:items-center gap-4 md:gap-10 pb-5 -mt-5">
         <h1 className='text-2xl md:text-3xl font-bold italic'>Oopsify!</h1>
         <div className="flex gap-4 md:gap-6">

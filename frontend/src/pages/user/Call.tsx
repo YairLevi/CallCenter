@@ -56,7 +56,11 @@ export function Call() {
 
       <div className="flex flex-col mt-10 h-full">
         <div className="flex flex-col md:flex-row md:items-center md:justify-between flex-shrink-0 gap-2">
-          <p className="font-bold">Tasks:</p>
+          <div className='flex flex-col gap-1'>
+            <p className="font-bold">Tasks:</p>
+            <p className='text-xs text-gray-500'>Press the status label to change status.</p>
+          </div>
+
           <div className="flex gap-2">
             <Button onClick={() => setOpenAddTask(true)}>Add Task</Button>
             <Button variant="outline" onClick={() => suggestedTasksDialogProps.open()}>
