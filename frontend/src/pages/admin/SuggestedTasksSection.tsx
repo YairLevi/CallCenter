@@ -8,19 +8,34 @@ import { Dialog, useDialogProps } from "@/components/dialog.tsx";
 import type { SuggestedTask } from "@/api/types.tsx";
 import { EditableText } from "@/components/editable-text.tsx";
 import { Placeholder } from "@/components/placeholder.tsx";
+import { X } from "lucide-react";
+
+import { tryGetErrorMessage } from "@/api/try-get-error-message.ts";
+import { useMutationErrorMessage } from "@/pages/admin/useMutationErrorMessage.tsx";
 
 type State = 'Loading' | 'Done'
 
 export function SuggestedTasksSection() {
-  const [name, setName] = useState('')
-  const { add, suggestedTasks, assign, update, removeTag } = useSuggestedTasks()
-  const assignTagDialog = useDialogProps()
   const { tags } = useTags()
+  const [errorText, setErrorText] = useState('')
 
-  // used to determine which task is currently edited. note: not ideal.
+  const [name, setName] = useState('')
+  // used to determine which task is currently edited. TODO: if there's time, try to find more organized solution
   const [selectedTask, setSelectedTask] = useState<SuggestedTask>()
-  const { mutate } = assign(selectedTask?.id)
-  const { mutate: mutateName } = update(selectedTask?.id)
+  const assignTagDialog = useDialogProps()
+
+  const { add, suggestedTasks, assign, update, removeTag, delete: deleteSuggestion } = useSuggestedTasks()
+
+  const assignTabToSuggestion = assign(selectedTask?.id)
+  const updateSuggestion = update(selectedTask?.id)
+
+  const error = useMutationErrorMessage([
+    deleteSuggestion,
+    removeTag,
+    assignTabToSuggestion,
+    updateSuggestion,
+    add,
+  ])
 
   function onAddTask() {
     if (name.length == 0)
@@ -29,7 +44,7 @@ export function SuggestedTasksSection() {
   }
 
   function onSubmit(tagID: string) {
-    mutate({ tagID })
+    assignTabToSuggestion.mutate({ tagID })
     assignTagDialog.close()
   }
 
@@ -37,6 +52,8 @@ export function SuggestedTasksSection() {
     setSelectedTask(task)
     assignTagDialog.open()
   }
+
+
 
   if (suggestedTasks.isPending)
     return <div>Loading...</div>
@@ -70,13 +87,15 @@ export function SuggestedTasksSection() {
                   <EditableText
                     initialValue={suggestion.task.name}
                     onEdit={() => setSelectedTask(suggestion)}
-                    onSave={(updatedName) => mutateName({ name: updatedName })}
+                    onSave={(updatedName) => updateSuggestion.mutate({ name: updatedName })}
                   />
 
-                  {!!suggestion.assignedTo && (
+                  {!!suggestion.assignedTo
+                    ?
                     <span
                       className="ml-2 flex items-center text-xs font-medium text-green-600 bg-green-100 border border-green-300 px-2 py-0.5 rounded-full">Assigned</span>
-                  )}
+                    : <div className='rounded-lg hover:bg-neutral-200 p-1' onClick={() => deleteSuggestion.mutate({ suggestionID: suggestion.id })}><X size={16}/></div>
+                  }
                 </div>
 
                 <div className="flex flex-wrap gap-2 my-3 items-center">
@@ -90,11 +109,12 @@ export function SuggestedTasksSection() {
                     + Add Tag
                   </Button>
                 </div>
+
               </div>
             ))
         }
       </div>
-
+      {error.length > 0 && <p className='my-5 text-red-500'>{error}</p>}
       <Dialog open={assignTagDialog.isOpen} onClose={assignTagDialog.close} title='Assign a tag to the task'>
         <Dialog.Group>
           <div className="flex flex-col gap-2 overflow-y-auto h-[50vh] pr-2">

@@ -2,6 +2,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import { queryKeys as callsQueryKeys } from './calls'
 
+// didn't manage to apply an optimized fetching mechanism in time for delivery.
 export const queryKeys = {
   getAll: () => ['suggested-tasks']
 }
@@ -43,12 +44,20 @@ export function useSuggestedTasksQuery() {
     },
   })
 
+  const deleteSuggestion = useMutation({
+    mutationFn: (dto: { suggestionID: string }) => axios.delete(`/suggested-tasks/${dto.suggestionID}`),
+    onSettled: async () => {
+      await queryClient.invalidateQueries({ queryKey: queryKeys.getAll() })
+    }
+  })
+
   return {
     getAll,
     add,
     assign,
     update,
     assignTaskToCall,
-    removeTag
+    removeTag,
+    deleteSuggestion
   }
 }

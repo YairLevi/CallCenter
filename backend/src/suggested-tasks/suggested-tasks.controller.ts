@@ -47,4 +47,10 @@ export class SuggestedTasksController {
     await this.taskService.update(task.id, { call: dto.assignToCallID as any, status: 'Open' })
     await this.suggestedTasksService.assignToCall(suggestedTaskID, dto.assignToCallID)
   }
+
+  @Delete(':id')
+  async delete(@Param('id') suggestedTaskID: string) {
+    const result = await this.suggestedTasksService.delete(suggestedTaskID)
+
+  }
 }

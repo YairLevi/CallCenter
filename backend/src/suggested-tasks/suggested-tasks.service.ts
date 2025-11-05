@@ -1,6 +1,6 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from "@nestjs/mongoose";
-import { Model } from "mongoose";
+import { Error, Model } from "mongoose";
 import { SuggestedTask, SuggestedTaskDocument } from "./suggested-tasks.model";
 import { AssignTagDTO } from "./suggested-tasks.dto";
 
@@ -25,14 +25,6 @@ export class SuggestedTasksService {
     })
   }
 
-  async update(id: string, dto: Partial<SuggestedTask>) {
-    return await this.model.findOneAndUpdate(
-      { _id: id },
-      dto,
-      { new: true }
-    ).exec()
-  }
-
   async addTag(id: string, dto: AssignTagDTO) {
     return await this.model.findOneAndUpdate(
       { _id: id },
@@ -54,5 +46,11 @@ export class SuggestedTasksService {
       { _id: suggestedTaskID },
       { $set: { assignedTo: callID } }
     )
+  }
+
+  async delete(id: string) {
+    const result = await this.model.deleteOne({ _id: id }).exec()
+    if (!result.acknowledged || result.deletedCount == 0)
+      throw new BadRequestException("Failed to delete the suggestion. Try to refresh the page.")
   }
 }

@@ -11,7 +11,8 @@ type ContextExports = {
   assign: (suggestedTaskID: string) => UseMutationResult,
   update: (SuggestedTaskID: string) => UseMutationResult,
   assignTaskToCall: (callID: string) => UseMutationResult,
-  removeTag: UseMutationResult
+  removeTag: UseMutationResult,
+  delete: UseMutationResult
 }
 
 const Context = createContext<ContextExports>({} as ContextExports)
@@ -36,6 +37,7 @@ export function SuggestedTasksProvider({ children }: PropsWithChildren) {
     update: queries.update,
     assignTaskToCall: queries.assignTaskToCall,
     removeTag: queries.removeTag,
+    delete: queries.deleteSuggestion
   }
 
   return (
