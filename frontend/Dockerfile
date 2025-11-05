@@ -8,6 +8,11 @@ COPY package*.json ./
 RUN npm install
 
 COPY . .
+ENV NODE_ENV=production
+
+# vite auto loads .env.production
+ARG FRONT_PROD_ENV
+RUN echo "$FRONT_PROD_ENV" > .env.production
 
 RUN npm run build
 

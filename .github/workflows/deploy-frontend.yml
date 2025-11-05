@@ -3,7 +3,7 @@ name: Deploy the frontend onto AWS ECR and ECS
 on:
   push:
     tags:
-      - 'frontend*'
+      - 'bla*'
 
 jobs:
   build-and-deploy:

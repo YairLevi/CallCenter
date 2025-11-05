@@ -5,8 +5,8 @@ env:
 
 on:
   push:
-    branches:
-      - main2
+    tags:
+      - '*frontend*'
 
 jobs:
   build-and-deploy:
@@ -25,9 +25,11 @@ jobs:
       - name: Configure Docker authentication with gcloud
         run: gcloud auth configure-docker
 
-      - name: Build and push Docker image from frontend folder
+      - name: Build and push Docker image
+        env:
+          FRONT_PROD_ENV: ${{ secrets.FRONT_PROD_ENV }}
         run: |
-          docker build -t gcr.io/${{ secrets.GCP_PROJECT_ID }}/${{ secrets.DOCKER_IMAGE_NAME }}:latest ./frontend
+          docker build --build-arg FRONT_PROD_ENV -t gcr.io/${{ secrets.GCP_PROJECT_ID }}/${{ secrets.DOCKER_IMAGE_NAME }}:latest ./frontend
           docker push gcr.io/${{ secrets.GCP_PROJECT_ID }}/${{ secrets.DOCKER_IMAGE_NAME }}:latest
 
       - name: Deploy to Cloud Run
