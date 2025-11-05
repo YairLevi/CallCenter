@@ -2,7 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { Model } from "mongoose";
 import { InjectModel } from "@nestjs/mongoose";
 import { Call, CallDocument } from "./calls.model";
-import { CreateCallDTO, UpdateCallDTO } from "./calls.dto";
+import { CreateCallDTO } from "./calls.dto";
 import { Task, TaskDocument } from "../tasks/tasks.model";
 
 @Injectable()
@@ -38,13 +38,15 @@ export class CallsService {
   }
 
   async addTask(id: string, taskName: string) {
-    const task = new Task()
-    task.name = taskName
-    await this.callModel.findOneAndUpdate(
-      { _id: id, },
+    const task = new Task();
+    task.name = taskName;
+
+    return await this.callModel.findOneAndUpdate(
+      { _id: id },
       { $push: { tasks: task } },
-      { new: true }
-    ).exec()
+      { new: true } // return the updated document
+    ).exec();
+
   }
 
   async changeTaskStatus(id: string, task: Partial<TaskDocument> ) {

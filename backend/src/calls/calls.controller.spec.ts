@@ -1,129 +1,131 @@
-import { Test, TestingModule } from '@nestjs/testing';
-import { CallsController } from './calls.controller';
-import { CallsService } from './calls.service';
-import * as request from 'supertest';
-import { INestApplication, HttpStatus } from '@nestjs/common';
-import { MongooseModule, SchemaFactory } from '@nestjs/mongoose';
-import { MongoMemoryServer } from 'mongodb-memory-server';
-import { Call } from './calls.model';
-import { CreateCallDTO, UpdateCallDTO } from './calls.dto';
+import { Test, TestingModule } from '@nestjs/testing'
+import { CallsController } from './calls.controller'
+import { CallsService } from './calls.service'
+import { TagsController } from '../tags/tags.controller'
+import { TagsService } from '../tags/tags.service'
+import * as request from 'supertest'
+import { INestApplication, HttpStatus } from '@nestjs/common'
+import { MongooseModule, SchemaFactory } from '@nestjs/mongoose'
+import { MongoMemoryServer } from 'mongodb-memory-server'
+import { Call } from './calls.model'
+import { Tag } from '../tags/tags.model'
+import { Task } from '../tasks/tasks.model'
 
-// --- Setup MongoMemoryServer for isolated testing ---
+let mongod: MongoMemoryServer
+let mongoUri: string
 
-let mongod: MongoMemoryServer;
-let mongoUri: string;
-
-// Function to initialize the in-memory database
 async function connectToTestDB() {
-  mongod = await MongoMemoryServer.create();
-  mongoUri = mongod.getUri();
-  return mongoUri;
+  mongod = await MongoMemoryServer.create()
+  mongoUri = mongod.getUri()
+  return mongoUri
 }
 
-// Function to close and stop the in-memory database
 async function closeTestDB() {
-  await mongod.stop();
+  await mongod.stop()
 }
 
-// --- Mock DTOs for testing ---
-const mockCreateDto: CreateCallDTO = {
-  name: 'John Doe',
-};
+describe('CallsController & TagsController (Integration Tests)', () => {
+  let app: INestApplication
 
-const mockUpdateDto: UpdateCallDTO = {
-  name: 'my updated name'
-};
-
-
-describe('CallsController (Integration Test with MongoDB)', () => {
-  let app: INestApplication;
-
-  // 1. Setup and Teardown the Test Database
   beforeAll(async () => {
-    // 1. Connect to the in-memory database
-    const uri = await connectToTestDB();
-
-    // 2. Compile the testing module
+    const uri = await connectToTestDB()
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [
-        // Connect to the in-memory database URI
         MongooseModule.forRoot(uri),
-        // Import the necessary Mongoose Schemas/Models
         MongooseModule.forFeature([{ name: Call.name, schema: SchemaFactory.createForClass(Call) }]),
+        MongooseModule.forFeature([{ name: Tag.name, schema: SchemaFactory.createForClass(Tag) }]),
+        MongooseModule.forFeature([{ name: Task.name, schema: SchemaFactory.createForClass(Task) }])
       ],
-      controllers: [CallsController],
-      providers: [CallsService], // Use the real service for integration
-    }).compile();
+      controllers: [CallsController, TagsController],
+      providers: [CallsService, TagsService]
+    }).compile()
 
-    // 3. Initialize the NestJS application
-    app = moduleFixture.createNestApplication();
-    await app.init();
-  });
+    app = moduleFixture.createNestApplication()
+    await app.init()
+  })
 
   afterAll(async () => {
-    // Close the NestJS app and stop the in-memory database
-    await app?.close();
-    await closeTestDB();
-  });
+    await app?.close()
+    await closeTestDB()
+  })
 
-  // --- Test Suite for /calls (POST, GET, PUT, DELETE) ---
+  it('/calls (GET) - should return empty array initially', async () => {
+    const response = await request(app.getHttpServer())
+      .get('/calls')
+      .expect(HttpStatus.OK)
 
-  let createdCallId: string;
+    expect(response.body).toEqual([])
+  })
 
-  // Test POST /calls
-  it('/calls (POST) - should create a new call', async () => {
+  let createdCallId: string
+
+  it('/calls (POST) - should create a call and return correct name and empty arrays', async () => {
+    const createDto = { name: 'Alice Johnson' }
+
     const response = await request(app.getHttpServer())
       .post('/calls')
-      .send(mockCreateDto)
-      .expect(HttpStatus.CREATED);
+      .send(createDto)
+      .expect(HttpStatus.CREATED)
 
-    expect(response.body).toBeDefined();
-    expect(response.body.callerName).toBe(mockCreateDto.name);
-    expect(response.body._id).toBeDefined();
+    expect(response.body.name).toBe('Alice Johnson')
+    expect(response.body.tags).toEqual([])
+    expect(response.body.tasks).toEqual([])
+    expect(response.body.id).toBeDefined()
 
-    // Save the ID for subsequent tests
-    createdCallId = response.body._id;
-  });
+    createdCallId = response.body.id
+  })
 
-  // Test GET /calls
-  it('/calls (GET) - should return an array of calls', async () => {
+  it('/calls/:id (GET) - should retrieve the created call by ID', async () => {
     const response = await request(app.getHttpServer())
-      .get('/calls')
-      .expect(HttpStatus.OK);
+      .get(`/calls/${createdCallId}`)
+      .expect(HttpStatus.OK)
 
-    expect(Array.isArray(response.body)).toBe(true);
-    expect(response.body.length).toBe(1);
-    expect(response.body[0]._id).toBe(createdCallId);
-  });
+    expect(response.body.id).toBe(createdCallId)
+    expect(response.body.name).toBe('Alice Johnson')
+    expect(response.body.tags).toEqual([])
+    expect(response.body.tasks).toEqual([])
+  })
 
-  // Test PUT /calls/:id
-  it('/calls/:id (PUT) - should update the call', async () => {
+  let createdTagId: string
+
+  it('/tags (POST) - should create a new tag', async () => {
     const response = await request(app.getHttpServer())
-      .put(`/calls/${createdCallId}`)
-      .send(mockUpdateDto)
-      .expect(HttpStatus.OK);
+      .post('/tags')
+      .send({ name: 'Priority' })
+      .expect(HttpStatus.CREATED)
 
-    expect(response.body).toBeDefined();
-    expect(response.body._id).toBe(createdCallId);
-  });
+    expect(response.body.id).toBeDefined()
+    expect(response.body.name).toBe('Priority')
+    createdTagId = response.body.id
+  })
 
-  // Test DELETE /calls/:id
-  it('/calls/:id (DELETE) - should delete the call and return 204 NO_CONTENT', async () => {
-    const response = await request(app.getHttpServer())
-      .delete(`/calls/${createdCallId}`)
-      .expect(HttpStatus.NO_CONTENT); // Checks for 204
+  it('/calls/:id/tags (PUT) - should assign tag to call and reflect in fetched call', async () => {
+    await request(app.getHttpServer())
+      .put(`/calls/${createdCallId}/tags`)
+      .send({ tagID: createdTagId })
+      .expect(HttpStatus.OK)
 
-    // Ensure the response body is empty or nearly empty for 204
-    expect(response.body).toEqual({});
-    expect(response.text).toBe('');
-  });
+    const getCallResponse = await request(app.getHttpServer())
+      .get(`/calls/${createdCallId}`)
+      .expect(HttpStatus.OK)
 
-  // Test GET /calls after deletion (should be empty)
-  it('/calls (GET) - should be empty after deletion', async () => {
-    const response = await request(app.getHttpServer())
-      .get('/calls')
-      .expect(HttpStatus.OK);
+    expect(getCallResponse.body.tags).toHaveLength(1)
+    expect(getCallResponse.body.tags[0].id).toBe(createdTagId)
+    expect(getCallResponse.body.tags[0].name).toBe('Priority')
+  })
 
-    expect(response.body.length).toBe(0);
-  });
-});
+  it('/tags/:id (PUT) - should rename tag and update name in associated call', async () => {
+    await request(app.getHttpServer())
+      .put(`/tags/${createdTagId}`)
+      .send({ name: 'High Priority' })
+      .expect(HttpStatus.OK)
+
+    const getCallResponse = await request(app.getHttpServer())
+      .get(`/calls/${createdCallId}`)
+      .expect(HttpStatus.OK)
+
+    expect(getCallResponse.body.tags).toHaveLength(1)
+    expect(getCallResponse.body.tags[0].id).toBe(createdTagId)
+    expect(getCallResponse.body.tags[0].name).toBe('High Priority')
+  })
+})
