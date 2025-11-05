@@ -25,9 +25,15 @@ export function useSuggestedTasksQuery() {
     onSettled: () => queryClient.invalidateQueries({ queryKey: queryKeys.getAll() }) // not very optimized, but enough for now.
   })
 
+  const update = (suggestedTaskID: string) => useMutation({
+    mutationFn: (dto: { name: string }) => axios.put(`/suggested-tasks/${suggestedTaskID}`, dto),
+    onSettled: () => queryClient.invalidateQueries({ queryKey: queryKeys.getAll() })
+  })
+
   return {
     getAll,
     add,
-    assign
+    assign,
+    update
   }
 }

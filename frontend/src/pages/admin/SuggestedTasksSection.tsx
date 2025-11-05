@@ -6,18 +6,20 @@ import { useTags } from "@/contexts/TagsProviders.tsx";
 import { Badge } from "@/components/badge.tsx";
 import { Dialog, useDialogProps } from "@/components/dialog.tsx";
 import type { SuggestedTask } from "@/api/types.tsx";
+import { EditableText } from "@/components/editable-text.tsx";
 
 type State = 'Loading' | 'Done'
 
 export function SuggestedTasksSection() {
   const [name, setName] = useState('')
-  const { add, suggestedTasks, assign } = useSuggestedTasks()
+  const { add, suggestedTasks, assign, update } = useSuggestedTasks()
   const assignTagDialog = useDialogProps()
   const { tags } = useTags()
 
   // used to determine which task is currently edited. note: not ideal.
   const [selectedTask, setSelectedTask] = useState<SuggestedTask>()
   const { mutate } = assign(selectedTask?.id)
+  const { mutate: mutateName } = update(selectedTask?.id)
 
   function onSubmit(tagID: string) {
     mutate({ tagID })
@@ -55,7 +57,9 @@ export function SuggestedTasksSection() {
               key={task.id}
               className="px-5 py-3 rounded-lg border-2 justify-between border-gray-200 flex items-start flex-col"
             >
-              <span className='font-semibold'>{task.name}</span>
+              <EditableText initialValue={task.name}
+                            onEdit={() => setSelectedTask(task)}
+                            onSave={(updatedName) => mutateName({ name: updatedName })}/>
               <div className="flex flex-wrap gap-2 my-3 items-center">
                 {task.tags.map(tag => <Badge key={tag.id} tag={tag} onDelete={() => {}}/>)}
                 <Button

@@ -7,7 +7,8 @@ import { useSuggestedTasksQuery } from "@/api/suggested-tasks.tsx";
 type ContextExports = {
   suggestedTasks: UseQueryResult<SuggestedTask[]>
   add: UseMutationResult,
-  assign: (suggestedTaskID: string) => UseMutationResult
+  assign: (suggestedTaskID: string) => UseMutationResult,
+  update: (SuggestedTaskID: string) => UseMutationResult,
 }
 
 const Context = createContext<ContextExports>({} as ContextExports)
@@ -28,7 +29,8 @@ export function SuggestedTasksProvider({ children }: PropsWithChildren) {
   const value: ContextExports = {
     suggestedTasks: queries.getAll,
     add: queries.add,
-    assign: queries.assign
+    assign: queries.assign,
+    update: queries.update
   }
 
   return (
