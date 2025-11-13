@@ -3,12 +3,14 @@ import { InjectModel } from "@nestjs/mongoose";
 import { Model } from "mongoose";
 import { Call, CallDocument } from "../calls/calls.model";
 import { TaskDocument, Task } from "../tasks/tasks.model";
+import { SuggestedTask, SuggestedTaskDocument } from "../suggested-tasks/suggested-tasks.model";
 
 @Injectable()
 export class CallAssignmentService {
   constructor(
     @InjectModel(Call.name) private callModel: Model<CallDocument>,
     @InjectModel(Task.name) private taskModel: Model<TaskDocument>,
+    @InjectModel(SuggestedTask.name) private suggestedTaskModel: Model<SuggestedTaskDocument>
   ) {}
 
   async pushTask(callId: string, taskName: string) {
@@ -33,5 +35,6 @@ export class CallAssignmentService {
       { $pull: { tasks: taskID } }
     )
     await this.taskModel.deleteOne({ _id: taskID });
+    await this.suggestedTaskModel.deleteOne({ task: taskID })
   }
 }
